@@ -1,7 +1,3 @@
-import Head from 'next/head'
-import Image from 'next/image'
-//if I use {} it goes to the exported object if without we have to go to the location of the exported function one folder bellow
-
 
 import { Hero } from '@components/UI/common'
 
@@ -12,12 +8,12 @@ import { useWeb3 } from '@components/providers'
 
 
  function Home({ courses }) {
-  const { test  } = useWeb3();
-
+  const { web3, isLoading} = useWeb3(); // deconstruct the web3Api object and retreive it via useWeb3()
   return (
 
     <>
-      {test}
+    {/* double ternary operator: After loading, check if web3 is loaded */}
+      {isLoading ? "Is loading web3" : web3 ? "Web3 Ready": "Please install Metamask" }
       <Hero />
 
       <CourseList courses={courses} />
@@ -26,8 +22,6 @@ import { useWeb3 } from '@components/providers'
 
   )
 }
-
-
 
 Home.Layout = BaseLayout
 

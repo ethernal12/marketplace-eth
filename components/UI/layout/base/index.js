@@ -1,4 +1,4 @@
-import { Web3Provider } from "@components/providers/web3";
+import { Web3Provider } from "@components/providers";
 import { Navbar, Footer } from "@components/UI/common";
 
 
