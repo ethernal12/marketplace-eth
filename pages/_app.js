@@ -1,6 +1,6 @@
 import '@styles/globals.css'
 
-const Noop = ({children}) => <>{children}</> //  takes the children and re-render them
+const Noop = ({children}) => <>{children}</> // takes the children and re-render them
 
 function MyApp({ Component, pageProps }) {
 
