@@ -1,16 +1,31 @@
 import { useWeb3 } from "@components/providers"
 import Link from "next/link"
+import { Button } from "@components/UI/common"
+import { useAccounts } from "@components/UI/web3/hooks/useAccounts"
+import { test } from "@components/UI/web3/hooks/test"
+
 
 export default function Navbar() {
-    const { connect, test } = useWeb3()
+    const { connect, web3, isWeb3Loaded, isLoading } = useWeb3()
+    //1st version
+    // const _useAccount = useAccounts(web3); //returns the function
+    // const { account } = _useAccount() // deconstruct the function
+    //alternate version
+    const {account} = useAccounts(web3)() // calling the function twice
+    const {Loading} = test(isLoading)()
+    
+
 
     return (
 
 
         <section>
+            {account}
+            
+            {Loading}
             <div className="relative pt-6 px-4 sm:px-6 lg:px-8">
                 <nav className="relative" aria-label="Global">
-                    <div className="flex justify-between">
+                    <div className="flex justify-between items-center">
                         <div>
                             <Link href="/" >
                                 <a
@@ -38,19 +53,35 @@ export default function Navbar() {
                                     className="font-medium mr-8 text-gray-500 hover:text-gray-900">Blogs
                                 </a>
                             </Link>
+
                         </div>
                         <div>
+
+
                             <a href="#" className="font-medium mr-8 text-gray-500 hover:text-gray-900">Company</a>
+                            {isLoading ?
+
+                                <Button
+                                    onClick={connect}>
+                                    Loading...
 
 
+                                </Button> :
+                                isWeb3Loaded ?
+                                    <Button
+                                        disabled={false}
+                                        onClick={connect}>
+                                        Connected
 
-                            <span
-                                onClick={connect}
-                                href="#"
-                                className="px-8 py-3 font-medium rounded-md text-base mr-8 text-white bg-indigo-600 hover:bg-indigo-800">
 
-                                Connect Wallet
-                            </span>
+                                    </Button> :
+                                    <Button
+                                        disabled={false}
+                                        onClick={() => window.open("https://metamask.io/")}>
+                                        Install metamask
+                                    </Button>
+
+                            }
 
                         </div>
                     </div>

@@ -1,6 +1,7 @@
-const { createContext, useContext, useState, useEffect } = require("react")
+const { createContext, useContext, useState, useEffect, useMemo } = require("react")
 import detectEthereumProvider from "@metamask/detect-provider";
 import Web3 from "web3"
+
 
 const Web3Context = createContext(null)
 
@@ -10,7 +11,7 @@ export default function Web3Provider({ children }) {
         provider: null,
         web3: null,
         contract: null,
-        isInitialized: null
+        isLoading: null
     })
 
     useEffect(() => {
@@ -37,16 +38,33 @@ export default function Web3Provider({ children }) {
 
 
     }, [])
+    // use memo is a react hook that exepts 2 arguments(state, [changes to the state]) deconstructed web3Api and additional states
 
     const _web3Api = useMemo(() => {
-
+        const { web3, provider, isLoading } = web3Api
         return {
 
-            ...web3Api,
-            connect: () => console.log("Trying to connect!"),
-            test: () => console.log("Hello world")
+            ...web3Api, // add at the and of the state object 
+            isWeb3Loaded: !web3Api.isLoading && web3, // if its done loading and web3 is true 
+            connect: web3Api.provider ? //add at the end of web3Api; if we have a provider
+
+                async () => {
+
+                    try {
+
+                        await web3Api.provider.request({ method: "eth_requestAccounts" }) // pops-up the metamask login prompter
+                      
+
+                    }
+                    catch {
+                        location.reload()
+                    }
+                } : // if we do not have a provider
+
+                () => console.log("Cnnot connect to metamask, try reloading your browser please") // if provider is null
         }
     }, [web3Api])
+
 
     return (
         // all the pages (children) can access web3Api objects

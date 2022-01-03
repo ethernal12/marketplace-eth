@@ -7,7 +7,10 @@ module.exports = {
         "8xl": "1920px"
       },
     },
-    extend: {},
+    extend: {
+      opacity:["disabled"],
+      cursor:["disabled"],
+    },
   },
   plugins: [],
 }
