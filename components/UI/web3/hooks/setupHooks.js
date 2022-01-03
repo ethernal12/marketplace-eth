@@ -10,7 +10,9 @@ const DEFAULT_HOOKS = {
 
 
 export const setupHooks = web3 => {
-
+    if(!web3){
+        return DEFAULT_HOOKS
+    }
 
     return{
 
