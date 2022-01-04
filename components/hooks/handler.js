@@ -1,7 +1,4 @@
-
-
-
-export const useAccounts = web3 => () => {
+export const handler = web3 => () => {
 
     return {
 
