@@ -1,8 +1,35 @@
-export const handler = web3 => () => {
+import { useState , useEffect} from "react"
 
-    return {
+export const handler = (web3, provider) => () => {
+    const [account, setAccount] = useState(null);
 
-        account : web3? "web3 account" : "null"
+    useEffect(() => {
+
+        const useAccount = async () => {
+            const accounts = await web3.eth.getAccounts()
+            setAccount(accounts[0])
+
+        }
+
+        web3 && useAccount() 
+
+    }, [web3])
+
+
+    useEffect(() => {
+
+        provider && 
+        provider.on("accountsChanged",
+
+        accounts =>  setAccount(accounts[0] ?? null))
+
+
     }
+    
+    
+    ,[provider])
+
+
+    return {account}
 
 }

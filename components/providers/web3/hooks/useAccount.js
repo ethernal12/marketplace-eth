@@ -4,6 +4,6 @@ import { useHooks } from "@components/providers/web3"
 export const useAccount = () => {
 
 
-    return useHooks(hooks => hooks.useAcocunt)()
+    return useHooks(hooks => hooks.useAccount)()// () executes the function
 
 }

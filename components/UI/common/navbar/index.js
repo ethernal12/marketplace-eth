@@ -3,7 +3,7 @@ import Link from "next/link"
 import { Button } from "@components/UI/common"
 
 
-import { useAccount } from "@components/hooks/useAccount"
+import { useAccount } from "@components/providers/web3/hooks/useAccount"
 
 export default function Navbar() {
     const { connect, web3, isWeb3Loaded, isLoading } = useWeb3()
@@ -12,17 +12,15 @@ export default function Navbar() {
     // const { account } = _useAccount() // deconstruct the function
     //alternate version
     //const {account} = useAccounts(web3)() // calling the function twice because we are returning the function with a
-    const {account} = useAccount() // hooks call the function setupHooks and passes the param. web3  which calls the useAccounts double function which returns the returning function on web3? condition
-    
+    const { account } = useAccount() // hooks call the function setupHooks and passes the param. web3  which calls the useAccounts double function which returns the returning function on web3? condition
+
 
 
     return (
 
 
         <section>
-            {account}
-            
-          
+
             <div className="relative pt-6 px-4 sm:px-6 lg:px-8">
                 <nav className="relative" aria-label="Global">
                     <div className="flex justify-between items-center">
@@ -68,13 +66,22 @@ export default function Navbar() {
 
                                 </Button> :
                                 isWeb3Loaded ?
-                                    <Button
-                                        disabled={false}
-                                        onClick={connect}>
-                                        Connected
+                                    account ?
+                                        <Button
+                                            variant="purple"
+                                            hovarable={false}
+                                        >
+                                            Connected
 
 
-                                    </Button> :
+                                        </Button> :
+                                        <Button
+                                            disabled={false}
+                                            onClick={connect}>
+                                            Connect Metamask
+
+
+                                        </Button> :
                                     <Button
                                         disabled={false}
                                         onClick={() => window.open("https://metamask.io/")}>
@@ -87,5 +94,16 @@ export default function Navbar() {
                     </div>
                 </nav>
             </div>
+            {account &&
+
+                <div className="flex justify-end sm:px-6 pt-1 lg:py-2 lg:px-8">
+                    <div className="text-white bg-indigo-600 rounded-md p-2">
+
+                        {account}
+                    </div>
+
+
+                </div>}
+
         </section>)
 }

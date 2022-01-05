@@ -47,7 +47,7 @@ export default function Web3Provider({ children }) {
 
             ...web3Api, // add at the and of the state object 
             isWeb3Loaded: web3 != null, // if its done loading and web3 is true 
-            getHooks:() => setupHooks(web3), 
+            getHooks:() => setupHooks(web3, provider), 
             connect: web3Api.provider ? //add at the end of web3Api; if we have a provider
             
                 async () => {
