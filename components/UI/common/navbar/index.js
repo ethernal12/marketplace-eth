@@ -66,12 +66,12 @@ export default function Navbar() {
 
                                 </Button> :
                                 isWeb3Loaded ?
-                                    account ?
+                                    account.data ?
                                         <Button
                                             variant="purple"
                                             hovarable={false}
                                         >
-                                            Connected
+                                            Hi there {account.isAdmin && "Admin"}
 
 
                                         </Button> :
@@ -94,12 +94,12 @@ export default function Navbar() {
                     </div>
                 </nav>
             </div>
-            {account &&
+            {account.data &&
 
                 <div className="flex justify-end sm:px-6 pt-1 lg:py-2 lg:px-8">
                     <div className="text-white bg-indigo-600 rounded-md p-2">
-
-                        {account}
+                            {/* account.data is because of useSWR */}
+                        {account.data}
                     </div>
 
 
