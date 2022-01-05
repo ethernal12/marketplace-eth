@@ -1,9 +1,9 @@
 import { useWeb3 } from "@components/providers"
 import Link from "next/link"
 import { Button } from "@components/UI/common"
+import { useRouter } from "next/router"
+import { useAccount } from "@components/hooks/web3/useAccount"
 
-
-import { useAccount } from "@components/providers/web3/hooks/useAccount"
 
 export default function Navbar() {
     const { connect, web3, isWeb3Loaded, isLoading } = useWeb3()
@@ -13,8 +13,7 @@ export default function Navbar() {
     //alternate version
     //const {account} = useAccounts(web3)() // calling the function twice because we are returning the function with a
     const { account } = useAccount() // hooks call the function setupHooks and passes the param. web3  which calls the useAccounts double function which returns the returning function on web3? condition
-
-
+    const { pathname } = useRouter()
 
     return (
 
@@ -32,7 +31,7 @@ export default function Navbar() {
                                 </a>
                             </Link>
 
-                            <Link href="/" >
+                            <Link href="/marketplace" >
                                 <a
 
                                     className="font-medium mr-8 text-gray-500 hover:text-gray-900">Marketplace
@@ -95,10 +94,10 @@ export default function Navbar() {
                 </nav>
             </div>
             {account.data &&
-
+                !pathname.includes("/marketplace") &&
                 <div className="flex justify-end sm:px-6 pt-1 lg:py-2 lg:px-8">
                     <div className="text-white bg-indigo-600 rounded-md p-2">
-                            {/* account.data is because of useSWR */}
+                        {/* account.data is because of useSWR() */}
                         {account.data}
                     </div>
 

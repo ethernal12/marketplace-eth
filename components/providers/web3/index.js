@@ -2,7 +2,7 @@ const { createContext, useContext, useState, useEffect, useMemo } = require("rea
 
 import detectEthereumProvider from "@metamask/detect-provider";
 import Web3 from "web3"
-import { setupHooks } from "@components/providers/web3/hooks/setupHooks";
+import { setupHooks } from "@components/hooks/web3/setupHooks";
 
 const Web3Context = createContext(null)
 
