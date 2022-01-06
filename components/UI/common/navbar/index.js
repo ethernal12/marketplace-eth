@@ -2,7 +2,7 @@ import { useWeb3 } from "@components/providers"
 import Link from "next/link"
 import { Button } from "@components/UI/common"
 import { useRouter } from "next/router"
-import { useAccount } from "@components/hooks/web3/useAccount"
+import { useAccount } from "@components/hooks/web3"
 
 
 export default function Navbar() {

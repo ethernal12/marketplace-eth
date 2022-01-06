@@ -40,12 +40,12 @@ export const handler = (web3, provider) => () => {
 
 
     return {
-        account: {
+        
             data, // is the account we get from swr data
             isAdmin: (data && adminAddresses [web3.utils.keccak256(data)]) ?? false, // ?? checks if it is null
             mutate,
             ...rest
-        }
+     
     }
 
 }

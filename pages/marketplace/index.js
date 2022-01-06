@@ -2,12 +2,13 @@
 
 
 import { CourseList } from "@components/UI/course"
+import { CourseCard } from "@components/UI/course"
 import { BaseLayout } from '@components/UI/layout'
 import { getAllCourses } from '@content/courses/fetcher'
 import { useWeb3 } from '@components/providers'
 import { WalletBar } from "@components/UI/web3"
-import { useAccount } from "@components/hooks/web3/useAccount"
-import { useNetwork } from "@components/hooks/web3/useNetwork"
+import { useAccount } from "@components/hooks/web3"
+import { useNetwork } from "@components/hooks/web3"
 
 
 
@@ -23,15 +24,30 @@ function Marketplace({ courses }) {
             {/* double ternary operator: After loading, check if web3 is loaded */}
             {isLoading ? "Is loading web3" : web3 ? "Web3 Ready" : "Please install Metamask"}
             <div className="py-4">
-                
-                <WalletBar 
-                address={account.data} 
-                networkId = {network.data}
+
+                <WalletBar
+                    address={account.data}
+
+                    network={{
+                        target:network.target,
+                        data:network.data,
+                        isSupported:network.isSupported,
+                        isLoading:network.isLoading
+
+                    }}
+                 
                 />
+
             </div>
 
 
-            <CourseList courses={courses} />
+            <CourseList 
+           
+            courses={courses} >
+                {/* // callback function is passed to the courseList and return courseCard as children */}
+                {course => <CourseCard  key= {course.id} course={course} />}
+
+            </CourseList>
 
         </>
 

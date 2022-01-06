@@ -14,8 +14,9 @@ export const handler = (web3, provider) => () => {
         1337: "Ganache"
 
     }
+    const targetNetwork = NETWORKS[process.env.NEXT_PUBLIC_TARGET_CHAIN_ID]
 
-    const { mutate, ...rest } = useSWR(() =>
+    const {data, mutate, ...rest } = useSWR(() =>
 
         web3 ? "web3/network" : null,
 
@@ -29,8 +30,8 @@ export const handler = (web3, provider) => () => {
 
     useEffect(() => {
 
-        provider &&
-            provider.on("chainChanged", chainId => mutate(NETWORKS[parseInt(chainId, 16)])) // convert to in form hex
+        provider && // if we have provider
+            provider.on("chainChanged", chainId => mutate(NETWORKS[parseInt(chainId, 16)])) // convert to int, from hex
 
 
     }, [web3])
@@ -39,7 +40,12 @@ export const handler = (web3, provider) => () => {
 
     return {
         network: {
+            data, // current active network name
+            
+             // is we have an error or data the function chainId has finished loading 
             mutate,
+            target: targetNetwork, // imported from .enc file
+            isSupported: data === targetNetwork, 
             ...rest// destructurise
         }
 
