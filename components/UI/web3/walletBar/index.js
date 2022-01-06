@@ -1,4 +1,4 @@
-export default function WalletBar({address}) {
+export default function WalletBar({address, networkId}) {
 
 
     return (
@@ -15,7 +15,7 @@ export default function WalletBar({address}) {
                     </div>
                 </div>
                 <div>
-                    <div><span>Currently on </span><strong className="text-2xl">Ethereum Main Network</strong></div>
+                    <div><span>Currently on </span><strong className="text-2xl">{networkId}</strong></div>
                 </div>
             </div>
         </div>

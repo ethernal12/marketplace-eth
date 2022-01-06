@@ -7,23 +7,27 @@ import { getAllCourses } from '@content/courses/fetcher'
 import { useWeb3 } from '@components/providers'
 import { WalletBar } from "@components/UI/web3"
 import { useAccount } from "@components/hooks/web3/useAccount"
+import { useNetwork } from "@components/hooks/web3/useNetwork"
 
 
 
 function Marketplace({ courses }) {
     const { web3, isLoading } = useWeb3(); // deconstruct the web3Api object and retreive it via useWeb3()
-    const {account} = useAccount()
- 
+    const { account } = useAccount()
+    const { network } = useNetwork()
 
     return (
 
         <>
-            
+
             {/* double ternary operator: After loading, check if web3 is loaded */}
             {isLoading ? "Is loading web3" : web3 ? "Web3 Ready" : "Please install Metamask"}
             <div className="py-4">
-
-                <WalletBar address = {account.data}/>
+                
+                <WalletBar 
+                address={account.data} 
+                networkId = {network.data}
+                />
             </div>
 
 
