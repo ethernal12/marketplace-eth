@@ -30,37 +30,37 @@ function Marketplace({ courses }) {
                     address={account.data}
 
                     network={{
-                        target:network.target,
-                        data:network.data,
-                        isSupported:network.isSupported,
-                        isLoading:network.isLoading
+                        target: network.target,
+                        data: network.data,
+                        isSupported: network.isSupported,
+                        isLoading: network.isLoading
 
                     }}
-                 
+
                 />
 
             </div>
 
 
-            <CourseList 
-           
-            courses={courses} >
+            <CourseList
+
+                courses={courses} >
                 {/* // callback function is passed to the courseList and return courseCard as children */}
-                {course => <CourseCard  
-                key= {course.id} 
-                course={course} 
-                Footer = {() => 
-                
-                <div className="mt-4">
-                    <Button variant="lightPurple">
+                {course => <CourseCard
+                    key={course.id}
+                    course={course}
+                    Footer={() =>
 
-                        Purchase
-                    </Button>
+                        <div className="mt-4">
+                            <Button variant="lightPurple">
 
-                </div>
-                
-                }
-                
+                                Purchase
+                            </Button>
+
+                        </div>
+
+                    }
+
                 />}
 
             </CourseList>
