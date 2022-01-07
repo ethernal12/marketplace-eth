@@ -9,6 +9,7 @@ import { useWeb3 } from '@components/providers'
 import { WalletBar } from "@components/UI/web3"
 import { useAccount } from "@components/hooks/web3"
 import { useNetwork } from "@components/hooks/web3"
+import { Button } from "@components/UI/common"
 
 
 
@@ -45,7 +46,22 @@ function Marketplace({ courses }) {
            
             courses={courses} >
                 {/* // callback function is passed to the courseList and return courseCard as children */}
-                {course => <CourseCard  key= {course.id} course={course} />}
+                {course => <CourseCard  
+                key= {course.id} 
+                course={course} 
+                Footer = {() => 
+                
+                <div className="mt-4">
+                    <Button variant="lightPurple">
+
+                        Purchase
+                    </Button>
+
+                </div>
+                
+                }
+                
+                />}
 
             </CourseList>
 

@@ -6,15 +6,18 @@ import { setupHooks } from "@components/providers/web3/hooks/setupHooks";
 
 const Web3Context = createContext(null)
 
+//is loading
 export default function Web3Provider({ children }) {
     const [web3Api, setWeb3Api] = useState({
 
         provider: null,
         web3: null,
         contract: null,
-        isLoading: null
+        isLoading: null,
+        hooks:setupHooks()
     })
 
+    //when its done loading
     useEffect(() => {
 
         const loadProvider = async () => {
@@ -25,8 +28,8 @@ export default function Web3Provider({ children }) {
                     provider,
                     web3,
                     contract: null,
-                    isLoading: false
-
+                    isLoading: false,
+                    hooks:setupHooks(web3, provider)
                 })
             }
             else {
@@ -47,7 +50,7 @@ export default function Web3Provider({ children }) {
 
             ...web3Api, // add at the and of the state object 
             isWeb3Loaded: web3 != null, // if its done loading and web3 is true 
-            getHooks:() => setupHooks(web3, provider), 
+            
             connect: web3Api.provider ? //add at the end of web3Api; if we have a provider
             
                 async () => {
@@ -90,7 +93,7 @@ export function useWeb3() {
 //function responsible for retreiving the hooks
 export function useHooks(hookFetcher) { //callback is a function that has to be passed in to retreive the hooks
 
-    const {getHooks} = useWeb3()
+    const {hooks} = useWeb3()
   
-    return hookFetcher(getHooks()) 
+    return hookFetcher(hooks) 
 }

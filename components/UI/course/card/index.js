@@ -1,7 +1,7 @@
 import Image from "next/image"
 import Link from "next/link"
 
-export default function CourseCard({ course }) {
+export default function CourseCard({ course, Footer }) {
 
 
 
@@ -29,9 +29,17 @@ export default function CourseCard({ course }) {
                     </Link>
                     <p className="mt-2 text-gray-500">
                         {course.description}</p>
+                        {
+                            Footer && 
+                            <Footer/>
+
+
+                        }
                 </div>
             </div>
+            
         </div>
+        
 
 
 

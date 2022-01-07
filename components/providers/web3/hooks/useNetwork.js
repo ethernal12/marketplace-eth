@@ -39,7 +39,7 @@ export const handler = (web3, provider) => () => {
 
 
     return {
-        network: {
+       
             data, // current active network name
             
              // is we have an error or data the function chainId has finished loading 
@@ -47,7 +47,7 @@ export const handler = (web3, provider) => () => {
             target: targetNetwork, // imported from .enc file
             isSupported: data === targetNetwork, 
             ...rest// destructurise
-        }
+       
 
         //the current network
     }
