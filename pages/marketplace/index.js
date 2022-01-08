@@ -2,7 +2,7 @@
 
 
 import { CourseList } from "@components/UI/course"
-import { CourseCard } from "@components/UI/course"
+import { CourseCard, CourseModal } from "@components/UI/course"
 import { BaseLayout } from '@components/UI/layout'
 import { getAllCourses } from '@content/courses/fetcher'
 import { useWeb3 } from '@components/providers'
@@ -10,6 +10,7 @@ import { WalletBar } from "@components/UI/web3"
 import { useAccount } from "@components/hooks/web3"
 import { useNetwork } from "@components/hooks/web3"
 import { Button } from "@components/UI/common"
+import { OrderModal } from "@components/UI/order"
 
 
 
@@ -64,6 +65,7 @@ function Marketplace({ courses }) {
                 />}
 
             </CourseList>
+            <OrderModal isOpen= {true}/>
 
         </>
 

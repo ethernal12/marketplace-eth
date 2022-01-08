@@ -6,7 +6,7 @@ const enhanceHooks = swrRes =>{
     return{
 
         ...swrRes,
-        initialResponse: swrRes.data || swrRes.error
+        initialResponse: swrRes.data || swrRes.error // added to all of the responses at the end
     }
 
 }
