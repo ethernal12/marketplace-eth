@@ -11,6 +11,7 @@ import { useAccount } from "@components/hooks/web3"
 import { useNetwork } from "@components/hooks/web3"
 import { Button } from "@components/UI/common"
 import { OrderModal } from "@components/UI/order"
+import { useState } from "react"
 
 
 
@@ -18,7 +19,7 @@ function Marketplace({ courses }) {
     const { web3, isLoading } = useWeb3(); // deconstruct the web3Api object and retreive it via useWeb3()
     const { account } = useAccount()
     const { network } = useNetwork()
-
+    const [selectedCourse, setSelectedCourse] = useState(null)
     return (
 
         <>
@@ -53,7 +54,11 @@ function Marketplace({ courses }) {
                     Footer={() =>
 
                         <div className="mt-4">
-                            <Button variant="lightPurple">
+                            
+                            <Button
+                            
+                                onClick={() => setSelectedCourse(course)}
+                                variant="lightPurple">
 
                                 Purchase
                             </Button>
@@ -65,7 +70,19 @@ function Marketplace({ courses }) {
                 />}
 
             </CourseList>
-            <OrderModal isOpen= {true}/>
+            
+            {/* only content from modal */}
+            {
+            selectedCourse &&
+                <OrderModal 
+                course={selectedCourse}
+                onClose={() => setSelectedCourse(null)}
+                />
+
+
+            }
+
+
 
         </>
 

@@ -15,7 +15,7 @@ export default function CourseModal({isOpen,children}) {
                     {/* Adds Gray BG */}
 
                     {isOpen &&
-                    <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" ariaHidden="true"></div>
+                    <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
                     
                     }
                     
