@@ -2,44 +2,39 @@
 
 
 import { CourseList } from "@components/UI/course"
-import { CourseCard, CourseModal } from "@components/UI/course"
+import { CourseCard } from "@components/UI/course"
 import { BaseLayout } from '@components/UI/layout'
 import { getAllCourses } from '@content/courses/fetcher'
 import { useWeb3 } from '@components/providers'
-import { WalletBar } from "@components/UI/web3"
-import { useAccount } from "@components/hooks/web3"
-import { useNetwork } from "@components/hooks/web3"
+
+import {useWalletnInfo } from "@components/hooks/web3"
 import { Button } from "@components/UI/common"
 import { OrderModal } from "@components/UI/order"
 import { useState } from "react"
+
+import Breadcrumb from "@components/UI/common/breadcrumbs"
+import { Main } from "next/document"
+import { MarketplaceHeader } from "@components/UI/common/marketplace"
 
 
 
 function Marketplace({ courses }) {
     const { web3, isLoading } = useWeb3(); // deconstruct the web3Api object and retreive it via useWeb3()
-    const { account } = useAccount()
-    const { network } = useNetwork()
+
     const [selectedCourse, setSelectedCourse] = useState(null)
+
+  
+    const { walletInfo } = useWalletnInfo()
+
     return (
 
         <>
 
             {/* double ternary operator: After loading, check if web3 is loaded */}
-            {isLoading ? "Is loading web3" : web3 ? "Web3 Ready" : "Please install Metamask"}
+            {/* {isLoading ? "Is loading web3" : web3 ? "Web3 Ready" : "Please install Metamask"} */}
             <div className="py-4">
-
-                <WalletBar
-                    address={account.data}
-
-                    network={{
-                        target: network.target,
-                        data: network.data,
-                        isSupported: network.isSupported,
-                        isLoading: network.isLoading
-
-                    }}
-
-                />
+            <MarketplaceHeader/>
+               
 
             </div>
 
@@ -51,17 +46,25 @@ function Marketplace({ courses }) {
                 {course => <CourseCard
                     key={course.id}
                     course={course}
+                    disabled={!walletInfo} // the courses images are grayed out if is disabled
                     Footer={() =>
 
                         <div className="mt-4">
-                            
+
+
+
                             <Button
-                            
+                                disabled={!walletInfo}
                                 onClick={() => setSelectedCourse(course)}
                                 variant="lightPurple">
 
                                 Purchase
                             </Button>
+
+
+
+
+
 
                         </div>
 
@@ -70,13 +73,13 @@ function Marketplace({ courses }) {
                 />}
 
             </CourseList>
-            
+
             {/* only content from modal */}
             {
-            selectedCourse &&
-                <OrderModal 
-                course={selectedCourse}
-                onClose={() => setSelectedCourse(null)}
+                selectedCourse &&
+                <OrderModal
+                    course={selectedCourse}
+                    onClose={() => setSelectedCourse(null)}
                 />
 
 

@@ -7,11 +7,13 @@ import { getAllCourses } from '@content/courses/fetcher'
 import { useWeb3 } from '@components/providers'
 
 
-function Home({ courses }) {
-  const { web3, isLoading } = useWeb3(); // deconstruct the web3Api object and retreive it via useWeb3()
 
+
+function Home({ courses }) {
+  const { web3, isLoading, provider } = useWeb3(); // deconstruct the web3Api object and retreive it via useWeb3()
+  
   const checkId = async () => {
-    console.log("web")
+   
     await web3.eth.getChainId(res => console.log(res))
 
   }
@@ -20,7 +22,7 @@ function Home({ courses }) {
 
     <>
       {/* double ternary operator: After loading, check if web3 is loaded */}
-      {isLoading ? "Is loading web3" : web3 ? "Web3 Ready" : "Please install Metamask"}
+      {isLoading ? "Is loading web3" : provider ? "Web3 Ready" : "Please install Metamask"}
 
       <Hero />
 

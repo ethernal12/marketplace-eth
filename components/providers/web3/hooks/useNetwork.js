@@ -21,8 +21,9 @@ export const handler = (web3, provider) => () => {
         web3 ? "web3/network" : null,
 
         async () => {
-
+            
             const chainId = await web3.eth.getChainId()
+        
             return NETWORKS[chainId]
         }
 
@@ -44,7 +45,7 @@ export const handler = (web3, provider) => () => {
             
              // is we have an error or data the function chainId has finished loading 
             mutate,
-            target: targetNetwork, // imported from .enc file
+            target: targetNetwork, // imported from .env file
             isSupported: data === targetNetwork, 
             ...rest// destructurise
        

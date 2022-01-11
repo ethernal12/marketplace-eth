@@ -16,7 +16,7 @@ export default function OrderModal({ course, onClose }) {
 
     const closeModal = () => {
         console.log("close")
-        //setIsOpen(false)
+        setIsOpen(false)
        
         onClose()
       }
@@ -95,7 +95,7 @@ export default function OrderModal({ course, onClose }) {
                         Submit
                     </Button>
                     <Button
-                        onClick={closeModal()}
+                        onClick={closeModal}
                         variant="red">
                         Cancel
 
