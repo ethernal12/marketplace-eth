@@ -46,7 +46,7 @@ export default function WalletBar() {
                             </div>
 
                         }
-                        {/* -------------have to refactor conditionals for install and connect metamask ------------------*/}
+                        {/* -------------have to refactor conditionals for installing and connecting metamask ------------------*/}
                         {!isWeb3Loaded && !account.data &&
 
                             <div className="flex items-center rounded-md bg-orange-600 py-4"><span className="px-2">{`Please ${install} metamask using the top button...  `}</span><strong className="text-2xl"></strong>
@@ -95,7 +95,7 @@ export default function WalletBar() {
 
                             </div>
                         }
-                        {/* -------------have to refactor conditionals for install and connect metamask ------------------*/}
+                        {/* -------------have to refactor conditionals for installing and connecting metamask ------------------*/}
 
 
                     </div>

@@ -1,19 +1,12 @@
-
-
-
 import { CourseList } from "@components/UI/course"
 import { CourseCard } from "@components/UI/course"
 import { BaseLayout } from '@components/UI/layout'
 import { getAllCourses } from '@content/courses/fetcher'
 import { useWeb3 } from '@components/providers'
-
-import {useWalletnInfo } from "@components/hooks/web3"
+import { useWalletnInfo } from "@components/hooks/web3"
 import { Button } from "@components/UI/common"
 import { OrderModal } from "@components/UI/order"
 import { useState } from "react"
-
-import Breadcrumb from "@components/UI/common/breadcrumbs"
-import { Main } from "next/document"
 import { MarketplaceHeader } from "@components/UI/common/marketplace"
 
 
@@ -23,7 +16,7 @@ function Marketplace({ courses }) {
 
     const [selectedCourse, setSelectedCourse] = useState(null)
 
-  
+
     const { walletInfo } = useWalletnInfo()
 
     return (
@@ -33,8 +26,8 @@ function Marketplace({ courses }) {
             {/* double ternary operator: After loading, check if web3 is loaded */}
             {/* {isLoading ? "Is loading web3" : web3 ? "Web3 Ready" : "Please install Metamask"} */}
             <div className="py-4">
-            <MarketplaceHeader/>
-               
+                <MarketplaceHeader />
+
 
             </div>
 

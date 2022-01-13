@@ -3,6 +3,9 @@ import Link from "next/link"
 import { Button } from "@components/UI/common"
 import { useRouter } from "next/router"
 import { useAccount } from "@components/hooks/web3"
+import ActiveLink from "../link"
+
+
 
 
 export default function Navbar() {
@@ -24,38 +27,47 @@ export default function Navbar() {
                 <nav className="relative" aria-label="Global">
                     <div className="flex justify-between items-center">
                         <div>
-                            <Link href="/" >
+                            <ActiveLink 
+                            href="/"
+                             >
                                 <a
 
-                                    className="font-medium mr-8 text-gray-500 hover:text-gray-900">Home
+                                    className="font-medium mr-8 text-indigo-600 hover:text-gray-900">Home
                                 </a>
-                            </Link>
+                            </ActiveLink>
 
-                            <Link href="/marketplace" >
+                            <ActiveLink 
+                            href="/marketplace"
+                            >
                                 <a
 
-                                    className="font-medium mr-8 text-gray-500 hover:text-gray-900">Marketplace
+                                    className="font-medium mr-8 text-indigo-600  hover:text-gray-900">Marketplace
                                 </a>
-                            </Link>
-                            <Link href="/" >
+                            </ActiveLink>
+                            <ActiveLink 
+                            href="/wishlist"
+                            
+                             >
                                 <a
 
-                                    className="font-medium mr-8 text-gray-500 hover:text-gray-900">Wishlist
+                                    className="font-medium mr-8 text-indigo-600 hover:text-gray-900">Wishlist
                                 </a>
-                            </Link>
+                            </ActiveLink>
 
-                            <Link href="/" >
+                            <ActiveLink 
+                            href="/blogs"
+                             >
                                 <a
 
-                                    className="font-medium mr-8 text-gray-500 hover:text-gray-900">Blogs
+                                    className="font-medium mr-8 text-indigo-600  hover:text-gray-900">Blogs
                                 </a>
-                            </Link>
+                            </ActiveLink>
 
                         </div>
                         <div>
 
 
-                            <a href="#" className="font-medium mr-8 text-gray-500 hover:text-gray-900">Company</a>
+                            <a href="#" className="font-medium mr-8 text-indigo-600 hover:text-gray-900">Company</a>
                             {isLoading ?
 
                                 <Button

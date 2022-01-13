@@ -1,11 +1,36 @@
-export default function Breadcrumb() {
+
+import Link from "next/link"
+import { ActiveLink } from "@components/UI/common"
+
+//import items links objects from MarketplaceHeader
+export default function Breadcrumb({items}) {
+
+    
     return (
 
         <nav aria-label="breadcrumb" className="mb-4">
             <ol className="flex leading-none text-indigo-600 divide-x divide-indigo-400">
-                <li className="pr-4"><a href="#">Buy</a></li>
-                <li className="px-4"><a href="#">My Courses</a></li>
-                <li className="px-4"><a href="#">Manage Courses</a></li>
+                {items.map((link, i) =>
+
+                    <li key = {items.href} className={`${i == 0 ? "pr-4" : "px-4"}`}>
+
+                        <ActiveLink 
+                        href={link.href}
+                        
+                        >
+
+                            <a className="hover:text-orange-700">
+                                {link.value}
+                           
+                            </a>
+                        </ActiveLink>
+
+                    </li>
+
+
+                )}
+               
+
             </ol>
         </nav>
 
