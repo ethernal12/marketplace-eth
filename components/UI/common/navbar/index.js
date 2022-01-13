@@ -32,7 +32,7 @@ export default function Navbar() {
                              >
                                 <a
 
-                                    className="font-medium mr-8 text-indigo-600 hover:text-gray-900">Home
+                                    className="font-medium mr-8 text-indigo-600 ">Home
                                 </a>
                             </ActiveLink>
 
@@ -41,7 +41,7 @@ export default function Navbar() {
                             >
                                 <a
 
-                                    className="font-medium mr-8 text-indigo-600  hover:text-gray-900">Marketplace
+                                    className="font-medium mr-8 text-indigo-600  ">Marketplace
                                 </a>
                             </ActiveLink>
                             <ActiveLink 
@@ -50,7 +50,7 @@ export default function Navbar() {
                              >
                                 <a
 
-                                    className="font-medium mr-8 text-indigo-600 hover:text-gray-900">Wishlist
+                                    className="font-medium mr-8 text-indigo-600 ">Wishlist
                                 </a>
                             </ActiveLink>
 
@@ -59,7 +59,7 @@ export default function Navbar() {
                              >
                                 <a
 
-                                    className="font-medium mr-8 text-indigo-600  hover:text-gray-900">Blogs
+                                    className="font-medium mr-8 text-indigo-600  ">Blogs
                                 </a>
                             </ActiveLink>
 
@@ -67,7 +67,7 @@ export default function Navbar() {
                         <div>
 
 
-                            <a href="#" className="font-medium mr-8 text-indigo-600 hover:text-gray-900">Company</a>
+                            <a href="#" className="font-medium mr-8 text-indigo-600 ">Company</a>
                             {isLoading ?
 
                                 <Button

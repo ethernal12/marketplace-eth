@@ -19,7 +19,7 @@ export default function Breadcrumb({items}) {
                         
                         >
 
-                            <a className="hover:text-orange-700">
+                            <a className="">
                                 {link.value}
                            
                             </a>

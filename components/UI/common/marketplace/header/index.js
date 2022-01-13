@@ -35,7 +35,7 @@ export default function MarketplaceHeader() {
             {/* breadcrumbs=>map.LINKS ActiveLink=>Link React.cloneElement(children) */}
 
             <div className="flex flex-row-reverse">
-                <Breadcrumb items={LINKS} />
+                <Breadcrumb items={LINKS}  />
             </div>
 
         </>

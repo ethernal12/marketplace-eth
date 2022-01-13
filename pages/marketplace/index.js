@@ -15,7 +15,7 @@ function Marketplace({ courses }) {
     const { web3, isLoading } = useWeb3(); // deconstruct the web3Api object and retreive it via useWeb3()
 
     const [selectedCourse, setSelectedCourse] = useState(null)
-
+    
 
     const { walletInfo } = useWalletnInfo()
 

@@ -10,7 +10,7 @@ export default function ActiveLink({ children, ...props}) {
     let className = children.props.className || "" // children is the <a/> element
     if (pathname === props.href) {
 
-        className = `${className} text-orange-400`
+        className = `text-amber-300 hover:text-gray-90 ${className}`
     }
 
     return (
