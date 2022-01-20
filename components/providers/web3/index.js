@@ -3,6 +3,7 @@ const { createContext, useContext, useState, useEffect, useMemo } = require("rea
 import detectEthereumProvider from "@metamask/detect-provider";
 import Web3 from "web3"
 import { setupHooks } from "@components/providers/web3/hooks/setupHooks";
+import { loadContract } from "utils/loadContract";
 
 const Web3Context = createContext(null)
 
@@ -14,22 +15,28 @@ export default function Web3Provider({ children }) {
         web3: null,
         contract: null,
         isLoading: null,
-        hooks:setupHooks()
+        hooks: setupHooks()
     })
 
     //when its done loading
     useEffect(() => {
 
+        
         const loadProvider = async () => {
             const provider = await detectEthereumProvider()
+
+
+
             if (provider) {
                 const web3 = new Web3(provider)
+                const contract = await loadContract("Marketplace", web3)
+                console.log(contract)
                 setWeb3Api({
                     provider,
                     web3,
-                    contract: null,
+                    contract,
                     isLoading: false,
-                    hooks:setupHooks(web3, provider)
+                    hooks: setupHooks(web3, provider)
                 })
             }
             else {
@@ -45,20 +52,20 @@ export default function Web3Provider({ children }) {
     // use memo is a react hook that exepts 2 arguments(state, [changes to the state]) deconstructed web3Api and additional states
     //debugger
     const _web3Api = useMemo(() => {
-        const { web3, provider, isLoading} = web3Api
+        const { web3, provider, isLoading } = web3Api
         return {
 
             ...web3Api, // add at the and of the state object 
             isWeb3Loaded: web3 != null, // if its done loading and web3 is true 
-            
+
             connect: web3Api.provider ? //add at the end of web3Api; if we have a provider
-            
+
                 async () => {
 
                     try {
 
                         await web3Api.provider.request({ method: "eth_requestAccounts" }) // pops-up the metamask login prompter
-                      
+
 
                     }
                     catch {
@@ -93,7 +100,7 @@ export function useWeb3() {
 //function responsible for retreiving the hooks
 export function useHooks(hookFetcher) { //callback is a function that has to be passed in to retreive the hooks
 
-    const {hooks} = useWeb3()
-  
-    return hookFetcher(hooks) 
+    const { hooks } = useWeb3()
+
+    return hookFetcher(hooks)
 }

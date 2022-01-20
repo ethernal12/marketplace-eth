@@ -7,3 +7,5 @@ export { default as Breadcrumbs } from "./breadcrumbs";
 export { default as OwnedCourseCard } from "../course/card"
 export { default as Button } from "./button"
 export { default as ActiveLink } from "./link"
+export { default as Message} from "./message"
+

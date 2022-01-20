@@ -15,6 +15,9 @@ const enhanceHooks = swrRes => {
 export const useAccount = () => {
 
 
+
+
+
     const swrRes = enhanceHooks(useHooks(hooks => hooks.useAccount)())// () executes the function
 
 
@@ -40,10 +43,44 @@ export const useNetwork = () => {
 
 }
 
+export const useOwnedCourses = () => {
+
+    //hooks goes to web3.index and exectues the function 
+    // export function useHooks(hookFetcher) { //callback is a function that has to be passed in to retreive the hooks
+
+    //     const { hooks } = useWeb3() // setWeb3Api({hooks: setupHooks(web3, provider)}
+
+    //     return hookFetcher(hooks)
+    // }
+
+
+// goes to web3/index.js and executes the function useHooks(hookFetcher) that goes to setupHooks and returns the actual hook
+    const res = useHooks(hooks => hooks.useOwnedCourses)() 
+    return {
+
+        ownedCourses: { data: res }
+    }
+}
+
+
+export const useTestHook = () => {
+
+    const res = useHooks(hooks => hooks.useTestHook)() 
+
+   return {
+       testHook : {
+
+        test:res
+       }
+
+
+    }
+}
+
 export const useWalletnInfo = () => {
     const { account } = useAccount()
     const { network } = useNetwork()
-    
+
     return {
         account,
         network,

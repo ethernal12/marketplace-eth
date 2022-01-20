@@ -67,7 +67,7 @@ export default function Navbar() {
                         <div>
 
 
-                            <a href="#" className="font-medium mr-8 text-indigo-600 ">Company</a>
+                            <a href="#" className="font-medium mr-8 text-indigo-600 hover:text-gray-900">Company</a>
                             {isLoading ?
 
                                 <Button

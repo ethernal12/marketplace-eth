@@ -12,7 +12,7 @@ export default function Breadcrumb({items}) {
             <ol className="flex leading-none text-indigo-600 divide-x divide-indigo-400">
                 {items.map((link, i) =>
 
-                    <li key = {items.href} className={`${i == 0 ? "pr-4" : "px-4"}`}>
+                    <li key = {link.href} className={`${i == 0 ? "pr-4" : "px-4"}`}>
 
                         <ActiveLink 
                         href={link.href}
