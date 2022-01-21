@@ -7,21 +7,35 @@ import { loadContract } from "utils/loadContract";
 
 const Web3Context = createContext(null)
 
-//is loading
-export default function Web3Provider({ children }) {
-    const [web3Api, setWeb3Api] = useState({
 
-        provider: null,
-        web3: null,
-        contract: null,
-        isLoading: null,
-        hooks: setupHooks()
-    })
+const createWeb3State = ({ web3, provider, contract, isLoading }) => {
+
+    return {
+        web3,
+        provider,
+        contract,
+        isLoading,
+        hooks: setupHooks({ web3, provider, contract })
+
+    }
+
+}
+
+export default function Web3Provider({ children }) {
+    const [web3Api, setWeb3Api] = useState(
+        createWeb3State({
+            web3: null,
+            provider: null,
+            contract: null,
+            isLoading: true
+
+
+        }))
 
     //when its done loading
     useEffect(() => {
 
-        
+
         const loadProvider = async () => {
             const provider = await detectEthereumProvider()
 
@@ -31,13 +45,15 @@ export default function Web3Provider({ children }) {
                 const web3 = new Web3(provider)
                 const contract = await loadContract("Marketplace", web3)
                 console.log(contract)
-                setWeb3Api({
-                    provider,
-                    web3,
-                    contract,
-                    isLoading: false,
-                    hooks: setupHooks(web3, provider)
-                })
+                setWeb3Api(
+                    createWeb3State({
+                        web3,
+                        provider,
+                        contract,
+                        isLoading: false
+
+
+                    }))
             }
             else {
                 setWeb3Api(({ ...web3Api, isLoading: false }))

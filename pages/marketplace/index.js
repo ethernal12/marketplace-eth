@@ -49,8 +49,6 @@ function Marketplace({ courses }) {
             alert("Data was not sent to the blockhain " + error)
         }
 
-
-
     }
 
     return (

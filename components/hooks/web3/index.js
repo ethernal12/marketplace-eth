@@ -43,7 +43,7 @@ export const useNetwork = () => {
 
 }
 
-export const useOwnedCourses = () => {
+export const useOwnedCourses = (...args) => {
 
     //hooks goes to web3.index and exectues the function 
     // export function useHooks(hookFetcher) { //callback is a function that has to be passed in to retreive the hooks
@@ -55,7 +55,7 @@ export const useOwnedCourses = () => {
 
 
 // goes to web3/index.js and executes the function useHooks(hookFetcher) that goes to setupHooks and returns the actual hook
-    const res = useHooks(hooks => hooks.useOwnedCourses)() 
+    const res = useHooks(hooks => hooks.useOwnedCourses)(...args)
     return {
 
         ownedCourses: { data: res }
@@ -63,19 +63,7 @@ export const useOwnedCourses = () => {
 }
 
 
-export const useTestHook = () => {
 
-    const res = useHooks(hooks => hooks.useTestHook)() 
-
-   return {
-       testHook : {
-
-        test:res
-       }
-
-
-    }
-}
 
 export const useWalletnInfo = () => {
     const { account } = useAccount()

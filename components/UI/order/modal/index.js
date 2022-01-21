@@ -232,7 +232,7 @@ export default function OrderModal({ course, onClose, onSubmit }) {
                     <Button
                         //disabled={formState.isDisabled}
                         onClick={() => {
-                            console.log(JSON.stringify(order))
+                            
                             onSubmit(order) // order is passed trought  on Submit prop to callback function in Markeplace
 
                         }}
