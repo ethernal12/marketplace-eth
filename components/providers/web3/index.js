@@ -8,8 +8,8 @@ import { loadContract } from "utils/loadContract";
 const Web3Context = createContext(null)
 
 
-const createWeb3State = ({ web3, provider, contract, isLoading }) => {
-
+const createWeb3State = ({ web3, provider, contract, isLoading}) => {
+    
     return {
         web3,
         provider,
@@ -22,6 +22,7 @@ const createWeb3State = ({ web3, provider, contract, isLoading }) => {
 }
 
 export default function Web3Provider({ children }) {
+    
     const [web3Api, setWeb3Api] = useState(
         createWeb3State({
             web3: null,
@@ -44,15 +45,16 @@ export default function Web3Provider({ children }) {
             if (provider) {
                 const web3 = new Web3(provider)
                 const contract = await loadContract("Marketplace", web3)
-                console.log(contract)
+                
                 setWeb3Api(
+                    
                     createWeb3State({
                         web3,
                         provider,
                         contract,
                         isLoading: false
 
-
+                        
                     }))
             }
             else {
@@ -108,15 +110,15 @@ export default function Web3Provider({ children }) {
 }
 
 export function useWeb3() {
-
+    
 
     return useContext(Web3Context) //we are retreiving the provider using useContext function
 }
 
 //function responsible for retreiving the hooks
-export function useHooks(hookFetcher) { //callback is a function that has to be passed in to retreive the hooks
-
+export function useHooks(hookFetcher) { //hookefetcher is a function that has to be passed in to retreive the hooks
+   
     const { hooks } = useWeb3()
-
+    
     return hookFetcher(hooks)
 }

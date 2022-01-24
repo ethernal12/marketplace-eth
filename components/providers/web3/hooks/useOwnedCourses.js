@@ -6,13 +6,13 @@ export const handler = (web3, contract) => (courses, account) => {
 
 
     const swrRes = useSWR(() =>
-        (web3 && account && contract) ? "web3/ownedCourses" : null,
+        (web3 && account && contract) ? `web3/ownedCourses/${account}` : null,
         async () => {
             const ownedCourses = []
             for (let i = 0; i < courses.length; i++) {
                 
                 const course = courses[i]
-                if (!course.id) { continue } //if there is no id on the course id=0, break the current itteration and continue with the next one
+                if (!course.id) { continue } //if there is no id on the course id=0, break the current iterration and continue with the next one
 
                 const hexCourseId = web3.utils.utf8ToHex(course.id)
                 const courseHash = web3.utils.soliditySha3(

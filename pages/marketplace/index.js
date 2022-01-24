@@ -3,7 +3,7 @@ import { CourseCard } from "@components/UI/course"
 import { BaseLayout } from '@components/UI/layout'
 import { getAllCourses } from '@content/courses/fetcher'
 import { useWeb3 } from '@components/providers'
-import { useWalletnInfo, useAccount } from "@components/hooks/web3"
+import { useWalletnInfo, useAccount, useOwnedCourses } from "@components/hooks/web3"
 import { Button } from "@components/UI/common"
 import { OrderModal } from "@components/UI/order"
 import { useState } from "react"
@@ -20,6 +20,9 @@ function Marketplace({ courses }) {
     const { canPurchaseCourse } = useWalletnInfo()
 
     const { walletInfo } = useWalletnInfo()
+    // indentify  purchased courses
+    
+    const { ownedCourses } = useOwnedCourses(courses, account.data)
 
     const purchaseCourse = async order => {
         const courseIdToHex = web3.utils.utf8ToHex(selectedCourse.id)
@@ -68,10 +71,13 @@ function Marketplace({ courses }) {
 
                 courses={courses} >
                 {/* // callback function is passed to the courseList and return courseCard as children */}
+               
                 {course => <CourseCard
+                 
                     key={course.id}
                     course={course}
-                    disabled={!walletInfo} // the courses images are grayed out if is disabled
+                    disabled={!walletInfo} // if network.data && network.isSupported &&
+                  
                     Footer={() =>
 
                         <div className="mt-4">
@@ -92,13 +98,13 @@ function Marketplace({ courses }) {
 
 
                         </div>
-
+ 
                     }
-
+                   
                 />}
-
+              
             </CourseList>
-
+         
             {/* only content from modal */}
             {
                 selectedCourse &&

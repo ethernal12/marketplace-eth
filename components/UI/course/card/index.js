@@ -9,7 +9,7 @@ export default function CourseCard({ course, Footer, disabled }) {
 
         <div className="bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl">
             <div className="flex h-full">
-                <div className="flex-1 h-ful">
+                <div className="flex-1 h-full">
                     <Image
                         className={`object-cover md:w-48 ${disabled && "filter grayscale"}`}
                         src={course.coverImage}

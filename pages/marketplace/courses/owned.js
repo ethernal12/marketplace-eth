@@ -19,9 +19,11 @@ export default function OwnedCourses({ courses }) {
                 <MarketplaceHeader />
                 <section className="gird grid-cols-1">
                     {/* {JSON.stringify(ownedCourses.data)} */}
-                    {ownedCourses.data?.map(course =>
+                    
+                    { ownedCourses.data?.map(course =>
 
                         <OwnedCourseCard
+                        
                         key = {course.id}
                         course = {course}
                         >
@@ -39,19 +41,7 @@ export default function OwnedCourses({ courses }) {
                         </OwnedCourseCard>
 
 
-                    )}
-
-
-
-
-
-
-
-
-
-
-
-
+                  )}    
 
 
                 </section>

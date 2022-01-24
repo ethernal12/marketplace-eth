@@ -55,10 +55,20 @@ export const useOwnedCourses = (...args) => {
 
 
 // goes to web3/index.js and executes the function useHooks(hookFetcher) that goes to setupHooks and returns the actual hook
-    const res = useHooks(hooks => hooks.useOwnedCourses)(...args)
+    const res = enhanceHooks(useHooks(hooks => hooks.useOwnedCourses)(...args))
     return {
 
-        ownedCourses: { data: res }
+        ownedCourses:  res 
+    }
+}
+
+export const useOwnedCourse = (...args) => {
+
+
+    const res = enhanceHooks(useHooks(hooks => hooks.useOwnedCourse)(...args))
+    return {
+
+        ownedCourse:  res 
     }
 }
 
@@ -68,12 +78,13 @@ export const useOwnedCourses = (...args) => {
 export const useWalletnInfo = () => {
     const { account } = useAccount()
     const { network } = useNetwork()
+    
 
     return {
         account,
         network,
-        walletInfo: !!(network.data && network.isSupported) // !! if one of the conditions is undefined || null it returnes false instead of undefined or null
-
+        walletInfo: !!(network.data && network.isSupported), // !! if one of the conditions is undefined || null it returnes false instead of undefined or null
+        
     }
 
 

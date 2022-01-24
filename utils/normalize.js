@@ -11,11 +11,11 @@ export const normalizeOwnedCourses = web3 => (course, ownedCourses) => {
 
 
     return {
-        ...course, 
+        ...course, // indvidual courses info
         ownedCourseId: ownedCourses.id,
         proof: ownedCourses.proof,
         ownedBy: ownedCourses.owner,
-        price: web3.utils.toWei(ownedCourses.price),
+        price: web3.utils.fromWei(ownedCourses.price),
         state: COURSE_STATE[ownedCourses.state]
     }
 }
