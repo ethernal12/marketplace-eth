@@ -2,7 +2,7 @@ import { useState } from "react"
 
 const TYPES = {
     success: "green",
-    warning: "blue",
+    warning: "yellow",
     danger: "red"
 }
 
@@ -21,11 +21,11 @@ export default function Message({ children, type = "success" }) {
             <div className="max-w-7xl mx-auto py-3 px-3 sm:px-3 lg:px-3">
                 <div className="flex items-center justify-between flex-wrap">
                     <div className="w-0 flex-1 flex items-center">
-                        <p className="ml-3 font-medium text-green-900 truncate">
-                            <span className="hidden md:inline">
+                        <div className="ml-3 font-medium text-green-900 truncate">
+                            <span className=" md:inline">
                                 {children}
                             </span>
-                        </p>
+                        </div>
                     </div>
                     <div className="order-2 flex-shrink-0 sm:order-3 sm:ml-3">
                         <button

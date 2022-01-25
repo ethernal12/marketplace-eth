@@ -1,14 +1,16 @@
 
-import { useAccount, useOwnedCourses } from "@components/hooks/web3";
+import { useAccount, useOwnedCourse, useOwnedCourses } from "@components/hooks/web3";
 import { Button, Message } from "@components/UI/common";
 import { MarketplaceHeader } from "@components/UI/common/marketplace";
 import { OwnedCourseCard } from "@components/UI/course";
 import { BaseLayout } from "@components/UI/layout";
 import { getAllCourses } from "@content/courses/fetcher";
+import Link from "next/link"
 
 export default function OwnedCourses({ courses }) {
     const { account } = useAccount()
     const { ownedCourses } = useOwnedCourses(courses, account.data)
+
 
 
     return (
@@ -18,14 +20,30 @@ export default function OwnedCourses({ courses }) {
             <div className="py-4">
                 <MarketplaceHeader />
                 <section className="gird grid-cols-1">
-                    {/* {JSON.stringify(ownedCourses.data)} */}
-                    
-                    { ownedCourses.data?.map(course =>
+                    {/* isEmpty is added in the enhanceHooks */}
+                    {!ownedCourses.isEmpty &&
+                        <div className="w-1/2 content-center">
+                            <Message type="warning">
+                                <Link href="/marketplace">
+                                    <a><i className="font-underline">Buy courses</i></a>
+
+
+                                </Link>
+                                <div>You don`t own any courses!</div>
+                            </Message>
+
+                        </div>
+
+
+                    }
+
+                    {ownedCourses.data?.map(course =>
 
                         <OwnedCourseCard
-                        
-                        key = {course.id}
-                        course = {course}
+
+                            key={course.id}
+                            course={course}
+                            ownedCourses={ownedCourses}
                         >
 
                             <Button>
@@ -41,7 +59,7 @@ export default function OwnedCourses({ courses }) {
                         </OwnedCourseCard>
 
 
-                  )}    
+                    )}
 
 
                 </section>

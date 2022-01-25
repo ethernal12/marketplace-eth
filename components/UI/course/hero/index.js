@@ -7,7 +7,7 @@ import Course from "@pages/courses/[slug]"
 export default function Hero({title, description, type, image, ownCourse}) {
 
 
-
+    
     return (
 
         <section>

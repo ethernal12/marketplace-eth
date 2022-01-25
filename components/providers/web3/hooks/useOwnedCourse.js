@@ -19,7 +19,7 @@ export const handler = (web3, contract) => (course, account) => {
 
 
             const ownedCourse = await contract.methods.getCourse(courseHash).call()
-            const normalize = normalizeOwnedCourses(web3)(course, ownedCourse)
+            
             if (ownedCourse.owner === "0x0000000000000000000000000000000000000000") {
                 return null
               

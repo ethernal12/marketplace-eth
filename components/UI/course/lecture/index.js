@@ -1,4 +1,9 @@
-export default function CourseLecture({locked}) {
+
+import Link from "next/link"
+import LInk from "next/link"
+
+
+export default function CourseLecture({ locked, courseState }) {
 
     const lectures = [
         "How to init App",
@@ -7,8 +12,8 @@ export default function CourseLecture({locked}) {
         "Programing in C++",
         "How to write For Loops",
         "Safe operator",
-      ]
-const status = "px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
+    ]
+    const status = "px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
     return (
         <section className="max-w-5xl mx-auto">
             <div className="flex flex-col">
@@ -42,20 +47,57 @@ const status = "px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
                                                 </div>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap">
-                                                
+
                                                 <span className={
                                                     locked ?
-                                                     `bg-red-100 text-red-800 ${status}`:
-                                                    `bg-green-100 text-green-800 ${status}`
+                                                        `bg-red-100 text-red-800 ${status}` :
+                                                        `bg-green-100 text-green-800 ${status}`
                                                 }
                                                 >
-                                                    {locked ? "Locked" : "Unlocked"}  
+                                                    {locked ? "Locked" : "Unlocked"}
                                                 </span>
                                             </td>
                                             <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
-                                                <a href="#" className="text-indigo-600 hover:text-indigo-900">
-                                                   {locked ? "Get access" : "Play"} 
-                                            </a>
+
+                                                {locked ?
+                                                    <>
+
+                                                        {courseState === "purchased" &&
+                                                            <Link href="/faq"  >
+                                                                <a className="text-indigo-600 hover:text-indigo-900">
+
+                                                                    Purchased
+                                                                </a>
+
+                                                            </Link>
+
+                                                        }
+                                                        {courseState === "deactivated" &&
+                                                            <Link href="/markeplace"  >
+                                                                <a className="text-indigo-600 hover:text-indigo-900">
+
+                                                                    Get access
+                                                                </a>
+
+                                                            </Link>
+
+                                                        }
+
+                                                    </> :
+
+
+                                                    <Link href="/watch"  >
+                                                        <a className="text-indigo-600 hover:text-indigo-900">
+
+                                                            Watch course
+                                                        </a>
+
+                                                    </Link>
+
+
+
+                                                }
+
                                             </td>
                                         </tr>
                                     )}
@@ -65,7 +107,7 @@ const status = "px-2 inline-flex text-xs leading-5 font-semibold rounded-full"
                     </div>
                 </div>
             </div>
-        </section>
+        </section >
 
 
     )
