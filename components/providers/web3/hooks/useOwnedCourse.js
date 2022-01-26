@@ -1,4 +1,5 @@
 import useSWR from "swr"
+import { createCourseHash } from "utils/courseHash"
 import { normalizeOwnedCourses } from "utils/normalize"
 
 export const handler = (web3, contract) => (course, account) => {
@@ -12,10 +13,8 @@ export const handler = (web3, contract) => (course, account) => {
 
 
            
-            const hexCourseId = web3.utils.utf8ToHex(course.id)
-            const courseHash = web3.utils.soliditySha3(
-                { type: "bytes16", value: hexCourseId }
-                , { type: "address", value: account })
+           
+            const courseHash = createCourseHash(web3)(course.id, account)
 
 
             const ownedCourse = await contract.methods.getCourse(courseHash).call()

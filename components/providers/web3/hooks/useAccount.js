@@ -15,9 +15,14 @@ export const handler = (web3, provider) => () => {
 
         async () => {
 
-            const account = await web3.eth.getAccounts()
+            const accounts = await web3.eth.getAccounts()
+            const account = accounts[0]
+            if (!account){
 
-            return account[0]
+                throw new Error ("No account found, try to refresh your browser");
+            }
+
+            return accounts[0]
 
         }
 
@@ -27,13 +32,18 @@ export const handler = (web3, provider) => () => {
 
     useEffect(() => {
 
-        provider &&
-            provider.on("accountsChanged",
+        const mutator = accounts => mutate(accounts[0] ?? null)
+        
+            provider?.on("accountsChanged", mutator) // mutate will return the new account every time it is changed
 
-                accounts => mutate(accounts[0] ?? null)) // mutate will return the new account every time it is changed
 
+            console.log(provider)
+                return () => {
 
+                    provider?.removeListener("accountsChanged", mutator)//when we are changing the page we are unsubscruibing the event listener accountsChanged
+                }
     }
+    
 
 
         , [provider])

@@ -1,6 +1,7 @@
 export{default as CourseList} from "./list"
 export{default as CourseHero} from "./hero"
 export{default as OwnedCourseCard} from "./card/OwnedCourseCard"
+export{default as ManageCourseCard} from "./card/ManageCourseCard"
 export{default as CourseCard} from "./card"
 export{default as CourseKeypoint} from "./keypoint"
 export{default as CourseLecture} from "./lecture"

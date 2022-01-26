@@ -57,7 +57,7 @@ contract Marketplace {
         return courseHash;
     }
 
-    function getCourse (bytes32 courseHash) 
+    function getCourse (bytes32 courseHash) //get course by hash
     external
     view 
     returns(Course memory) {

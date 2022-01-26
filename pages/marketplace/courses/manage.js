@@ -1,34 +1,43 @@
 
 import { Button } from "@components/UI/common";
 import { MarketplaceHeader } from "@components/UI/common/marketplace";
-import { CourseFilter, OwnedCourseCard } from "@components/UI/course";
+import { CourseFilter, ManageCourseCard } from "@components/UI/course";
 import { BaseLayout } from "@components/UI/layout";
+import { useAccount, useManageCourses } from "@components/hooks/web3";
+import { normalizeOwnedCourses } from "utils/normalize";
+
 
 export default function ManageCourses() {
+  const { account } = useAccount()
+  const { manageCourses } = useManageCourses(account.data)
 
-    return (
-      <>
-        <div className="py-4">
-          <MarketplaceHeader />
-          <CourseFilter/>
-        </div>
-        <section className="grid grid-cols-1">
-          <OwnedCourseCard>
-            <div className="flex mr-2 relative rounded-md">
-              <input
-                type="text"
-                name="account"
-                id="account"
-                className="w-96 focus:ring-indigo-500 shadow-md focus:border-indigo-500 block pl-7 p-4 sm:text-sm border-gray-300 rounded-md"
-                placeholder="0x2341ab..." />
-              <Button>
-                Verify
-              </Button>
-            </div>
-          </OwnedCourseCard>
-        </section>
-      </>
-    )
-  }
-  
-  ManageCourses.Layout = BaseLayout
+ console.log(manageCourses.data)
+
+  return (
+    <>
+
+      <div className="py-4">
+        <MarketplaceHeader />
+        <CourseFilter />
+      </div>
+      <section className="grid grid-cols-1">
+
+        {manageCourses.data?.map(course =>
+
+          <ManageCourseCard
+            key={course.ownedCourseId}
+            course={course}
+
+          
+          />
+
+          
+
+        )}
+
+      </section>
+    </>
+  )
+}
+
+ManageCourses.Layout = BaseLayout

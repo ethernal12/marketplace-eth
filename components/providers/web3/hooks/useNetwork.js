@@ -23,6 +23,11 @@ export const handler = (web3, provider) => () => {
         async () => {
             
             const chainId = await web3.eth.getChainId()
+
+            if(!chainId){
+
+                throw new Error("No account found, try to refresh your browser")
+            }
         
             return NETWORKS[chainId]
         }
@@ -31,11 +36,23 @@ export const handler = (web3, provider) => () => {
 
     useEffect(() => {
 
-        provider && // if we have provider
-            provider.on("chainChanged", chainId => mutate(NETWORKS[parseInt(chainId, 16)])) // convert to int, from hex
+        const mutator = chainId => mutate(NETWORKS[parseInt(chainId, 16)]) // convert to int, from hex
+        
+            provider?.on("chainChanged", mutator) // mutate will return the new account every time it is changed
 
 
-    }, [web3])
+            console.log(provider)
+                return () => {
+
+                    provider?.removeListener("chainChanged", mutator) //when we are changing the page we are unsubscruibing the event listener accountsChanged
+                }
+    }
+    
+
+
+        , [provider])
+
+   
 
 
 

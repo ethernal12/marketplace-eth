@@ -1,9 +1,10 @@
 
+import { Loader } from "@components/UI/common"
 import Link from "next/link"
-import LInk from "next/link"
 
 
-export default function CourseLecture({ locked, courseState }) {
+
+export default function CourseLecture({ locked, courseState, isLoading }) {
 
     const lectures = [
         "How to init App",
@@ -49,6 +50,9 @@ export default function CourseLecture({ locked, courseState }) {
                                             <td className="px-6 py-4 whitespace-nowrap">
 
                                                 <span className={
+                                                    isLoading?
+                                                    <Loader/>
+                                                    :
                                                     locked ?
                                                         `bg-red-100 text-red-800 ${status}` :
                                                         `bg-green-100 text-green-800 ${status}`

@@ -2,7 +2,7 @@ import { useState } from "react"
 
 const TYPES = {
     success: "green",
-    warning: "yellow",
+    warning: "red",
     danger: "red"
 }
 
