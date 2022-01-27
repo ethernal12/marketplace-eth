@@ -10,6 +10,7 @@ contract Marketplace {
     }
 
     struct Course {
+        bytes32 courseHash;
         uint256 id; //32 bytes
         uint256 price; //32 bytes
         bytes32 proof; // 32 bytes
@@ -47,6 +48,7 @@ contract Marketplace {
         uint256 id = totalCoursesOwned++;
         ownedCourseHash[id] = courseHash;
         ownedCourses[courseHash] = Course({
+            courseHash:courseHash,
             id: id,
             price: msg.value,
             proof: proof,

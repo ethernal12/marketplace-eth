@@ -1,6 +1,7 @@
 
 import { useAccount, useNetwork, useOwnedCourses } from "@components/hooks/web3";
-import { Button, Message } from "@components/UI/common";
+import { useWeb3 } from "@components/providers";
+import { Button, Loader, Message } from "@components/UI/common";
 import { MarketplaceHeader } from "@components/UI/common/marketplace";
 import { OwnedCourseCard } from "@components/UI/course";
 import { BaseLayout } from "@components/UI/layout";
@@ -12,7 +13,7 @@ export default function OwnedCourses({ courses }) {
     const { network } = useNetwork()
     const { account } = useAccount()
     const { ownedCourses } = useOwnedCourses(courses, account.data)
-
+    const { isLoading } = useWeb3()
 
 
     return (
@@ -23,21 +24,30 @@ export default function OwnedCourses({ courses }) {
                 <MarketplaceHeader />
                 <section className="gird grid-cols-1">
                     {/* isEmpty is added in the enhanceHooks */}
-                    {ownedCourses.isEmpty &&
-                        <div className="w-1/2 content-center">
-                            <Message type="warning">
-                                <Link href="/marketplace">
-                                    <a><i className="font-underline">Buy courses</i></a>
+
+                    {isLoading &&
+                    <Loader/>}
+                    {
+                        ownedCourses.isEmpty &&
+                            <div className="w-1/2 content-center">
+                                <Message type="warning">
+                                    <Link href="/marketplace">
+                                        <a><i className="font-underline">Buy courses</i></a>
 
 
-                                </Link>
-                                <div>You don`t own any courses!</div>
-                            </Message>
+                                    </Link>
+                                    <div>You don`t own any courses!</div>
+                                </Message>
 
-                        </div>
+                            </div>
 
 
                     }
+
+
+
+                    
+
                     {account.isEmpty &&
                         <div className="w-1/2 content-center">
                             <Message type="warning">

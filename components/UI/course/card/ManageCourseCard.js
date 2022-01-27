@@ -5,7 +5,7 @@ export default function ManageCourseCard({ children, course }) {
 
 
 
-    
+
 
 
     const bgColor = {
@@ -60,7 +60,7 @@ export default function ManageCourseCard({ children, course }) {
 
                             {Object.keys(course).map((key,i) => 
                                 <Item
-                                
+                                key = {i}
                                 title= {key}
                                 value={course[key]}
                                 color={`colVar${i}`}
@@ -78,9 +78,9 @@ export default function ManageCourseCard({ children, course }) {
 
 
             }
-            {!course &&
+            {course.length === 0 &&
                 <div>
-                    <h1>No courses bought yet!</h1>
+                    <h1>No courses were bought yet!</h1>
 
                 </div>
 

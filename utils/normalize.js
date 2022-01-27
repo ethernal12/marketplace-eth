@@ -17,6 +17,7 @@ export const normalizeOwnedCourses = web3 => (course, ownedCourses) => {
         ownedBy: ownedCourses.owner,
         price: web3.utils.fromWei(ownedCourses.price),
         state: COURSE_STATE[ownedCourses.state],
-        hash: ownedCourses.hash
+        courseHash: ownedCourses.courseHash
+        
     }
 }

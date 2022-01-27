@@ -1,10 +1,11 @@
 import Link from "next/link"
 import Image from "next/image"
 import Course from "@pages/courses/[slug]"
+import  Loader  from "@components/UI/common"
 
 
 
-export default function Hero({title, description, type, image, ownCourse}) {
+export default function Hero({title, description, type, image, ownedCourse, isLoading}) {
 
 
     
@@ -20,12 +21,19 @@ export default function Hero({title, description, type, image, ownCourse}) {
                         <div className="relative pt-6 px-4 sm:px-6 lg:px-8">
                         </div>
                         <main className="mt-10 mx-auto max-w-7xl px-4 sm:mt-12 sm:px-6 md:mt-16 lg:mt-20 lg:px-8 xl:mt-28">
-                        {ownCourse&&
-                        <div className="text-xl inline-block rounded-full bg-green-300 py-4 px-2" >
-
-                            You already own this course!
-                        </div>
-                        } 
+                        
+                       
+                          { ownedCourse && 
+                            <div className="text-xl inline-block rounded-full bg-green-300 py-4 px-2" >
+    
+                                You already own this course!
+                            </div>
+                            }
+                         
+                      
+                         
+                           
+                        
                             <div className="sm:text-center lg:text-left">
                                 <h1 className="text-4xl tracking-tight font-extrabold text-gray-900 sm:text-5xl md:text-6xl">
                                     <span className="block xl:inline">{title.substring(0, title.length/2 )}</span>

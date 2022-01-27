@@ -41,7 +41,7 @@ export const handler = (web3, provider) => () => {
             provider?.on("chainChanged", mutator) // mutate will return the new account every time it is changed
 
 
-            console.log(provider)
+           
                 return () => {
 
                     provider?.removeListener("chainChanged", mutator) //when we are changing the page we are unsubscruibing the event listener accountsChanged

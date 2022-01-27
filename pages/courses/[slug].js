@@ -8,18 +8,18 @@ import { getAllCourses } from "@content/courses/fetcher"
 
 export default function Course({ course }) {
     const { account } = useAccount()
-    const {isLoading} = useWeb3()
+    const { isLoading } = useWeb3()
     const { ownedCourse } = useOwnedCourse(course, account.data)
 
     const courseState = ownedCourse.data?.state
-    
 
+    console.log(ownedCourse.data)
 
 
     const isLocked =
-    !courseState ||
-    courseState === "purchased" || 
-    courseState === "deactivated" // = true
+        !courseState ||
+        courseState === "purchased" ||
+        courseState === "deactivated" // = true
 
 
 
@@ -34,7 +34,8 @@ export default function Course({ course }) {
 
                 <div className="py-5">
                     <CourseHero
-                        ownCourse={!!ownedCourse.data}
+                        isLoading={isLoading}
+                        ownedCourse={ownedCourse.data}
                         type={course.type}
                         title={course.title}
                         description={course.description}
@@ -90,7 +91,7 @@ export default function Course({ course }) {
 
 
                 <CourseLecture
-                    isLoading = {isLoading}
+                    isLoading={isLoading}
                     locked={isLocked}
                     courseState={courseState}
                 />

@@ -11,7 +11,9 @@ export default function ManageCourses() {
   const { account } = useAccount()
   const { manageCourses } = useManageCourses(account.data)
 
- console.log(manageCourses.data)
+  // if(manageCourses.data.length === 0){
+  // console.log("empty")
+  // }
 
   return (
     <>
