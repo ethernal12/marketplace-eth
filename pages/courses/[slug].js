@@ -22,10 +22,6 @@ export default function Course({ course }) {
         courseState === "deactivated" // = true
 
 
-
-
-
-
     return (
 
         <>
@@ -95,14 +91,6 @@ export default function Course({ course }) {
                     locked={isLocked}
                     courseState={courseState}
                 />
-
-
-
-
-
-
-
-
 
 
             </div>

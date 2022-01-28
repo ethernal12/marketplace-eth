@@ -1,19 +1,71 @@
 
-import { Button } from "@components/UI/common";
+import { Button, Message } from "@components/UI/common";
 import { MarketplaceHeader } from "@components/UI/common/marketplace";
 import { CourseFilter, ManageCourseCard } from "@components/UI/course";
 import { BaseLayout } from "@components/UI/layout";
-import { useAccount, useManageCourses } from "@components/hooks/web3";
-import { normalizeOwnedCourses } from "utils/normalize";
+import { useAccount, useAdmin, useManageCourses } from "@components/hooks/web3";
+import { useState } from "react";
+import { compareProof } from "utils/compareProof";
+import { useWeb3 } from "@components/providers";
 
+
+
+
+export const VerificationInput = ({ onVerify }) => {
+  const [email, setEmail] = useState("")
+
+
+  return (
+    <div className="flex mr-2 relative rounded-md">
+      <input
+        value={email}
+        onChange={({ target: { value } }) => setEmail(value)}
+        type="text"
+        name="account"
+        id="account"
+        className="w-96 focus:ring-indigo-500 shadow-md focus:border-indigo-500 block pl-7 p-4 sm:text-sm border-gray-300 rounded-md"
+        placeholder="0x2341ab..." />
+      <Button
+        onClick={() => onVerify(email)} // sendsFunction with email parameters to VerificationInput component that calls verifyCourse const function
+      >
+        Verify
+      </Button>
+    </div>
+
+
+  )
+
+
+}
 
 export default function ManageCourses() {
-  const { account } = useAccount()
-  const { manageCourses } = useManageCourses(account.data)
 
-  // if(manageCourses.data.length === 0){
-  // console.log("empty")
-  // }
+  const { account } = useAdmin({ redirectTo: "/marketplace" })
+  
+
+  const { manageCourses } = useManageCourses(account)
+  const { web3 } = useWeb3()
+  const [proofedOwnership, setProofedOwnership] = useState({})
+
+  const verifyCourse = (email, { hash, proof }) => {
+
+    compareProof(web3)(hash, email, proof) ? // check if courseHash + email === hash
+      setProofedOwnership({
+        ...proofedOwnership,
+        [hash]: true
+
+      }) :
+      setProofedOwnership({
+        ...proofedOwnership,
+        [hash]: false
+
+      })
+
+
+  }
+  if(!account.isAdmin){
+    return null
+  }
 
   return (
     <>
@@ -30,10 +82,45 @@ export default function ManageCourses() {
             key={course.ownedCourseId}
             course={course}
 
-          
-          />
 
-          
+          >
+            <VerificationInput
+
+              onVerify={(email) => {
+
+                verifyCourse(email, { hash: course.courseHash, proof: course.proof })
+
+              }}
+
+            />
+
+
+            {proofedOwnership[course.courseHash] &&
+              < div className="mt-2" >
+                <Message>
+
+                  Verified
+
+                </Message>
+
+              </div>
+
+            }
+            {proofedOwnership[course.courseHash] === false &&
+              < div className="mt-2">
+                <Message type="danger">
+
+                  Wrong proof!
+
+                </Message>
+
+              </div>
+
+            }
+
+          </ManageCourseCard>
+
+
 
         )}
 

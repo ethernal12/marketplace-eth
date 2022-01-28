@@ -4,10 +4,11 @@ import { normalizeOwnedCourses } from "utils/normalize"
 
 export const handler = (web3, contract) => account => {
 
-
+   //account.data is the admin accoutn
+   //account.isAdmin returns bool
 
     const swrRes = useSWR(() =>
-        (web3 && account && contract) ? `web3/manageCourses/${account}` : null,
+        (web3 && account && account.isAdmin &&  contract) ? `web3/manageCourses/${account.data}` : null,
         async () => {
             const courses = []
             const courseCount = await contract.methods.getNumberOfCourses().call()
@@ -21,9 +22,6 @@ export const handler = (web3, contract) => account => {
                 if (getCourseStruct) {
                     courses.push(normalizeOwnedCourses(web3)(null, getCourseStruct))
                 }
-
-
-
 
             }
 

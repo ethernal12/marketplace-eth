@@ -61,7 +61,7 @@ export default function ManageCourseCard({ children, course }) {
                             {Object.keys(course).map((key,i) => 
                                 <Item
                                 key = {i}
-                                title= {key}
+                                title= {key[0].toUpperCase() + key.slice(1)}
                                 value={course[key]}
                                 color={`colVar${i}`}
                             />

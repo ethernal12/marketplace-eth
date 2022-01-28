@@ -68,15 +68,16 @@ export default function Web3Provider({ children }) {
 
     }, [])
     // use memo is a react hook that exepts 2 arguments(state, [changes to the state]) deconstructed web3Api and additional states
-    //debugger
+   
     const _web3Api = useMemo(() => {
         const { web3, provider, isLoading } = web3Api
         return {
 
             ...web3Api, // add at the and of the state object 
             isWeb3Loaded: web3 != null, // if its done loading and web3 is true 
+            requireInstall: !isLoading && !web3 ,
 
-            connect: web3Api.provider ? //add at the end of web3Api; if we have a provider
+            connect: provider ? //add at the end of web3Api; if we have a provider
 
                 async () => {
 

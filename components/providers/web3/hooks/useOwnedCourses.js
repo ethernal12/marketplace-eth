@@ -16,10 +16,10 @@ export const handler = (web3, contract) => (courses, account) => {
                 if (!course.id) { continue } //if there is no id on the course id=0, break the current iterration and continue with the next one
 
                
-                const courseHash = createCourseHash(web3)(course.id, account)
+                const byHash = createCourseHash(web3)(course.id, account)
                 
 
-                const ownedCourse = await contract.methods.getCourse(courseHash).call()
+                const ownedCourse = await contract.methods.getCourse(byHash).call()
                 const normalize = normalizeOwnedCourses(web3)(course, ownedCourse)
                 if (ownedCourse.owner !== "0x0000000000000000000000000000000000000000") {
 

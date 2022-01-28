@@ -1,15 +1,19 @@
 import { useHooks } from "@components/providers/web3"
+import { useWeb3} from "@components/providers/web3"
+import { useRouter } from "next/router"
+import { useEffect } from "react/cjs/react.development"
+
 
 
 const _isEmpty = data => {
     return (
-        
-      data == null ||
-      data === "" ||
-      (Array.isArray(data) && data.length === 0) ||
-      (data.constructor === Object && Object.keys(data).length === 0)
+
+        data == null ||
+        data === "" ||
+        (Array.isArray(data) && data.length === 0) ||
+        (data.constructor === Object && Object.keys(data).length === 0)
     )
-  }
+}
 
 
 
@@ -44,6 +48,34 @@ export const useAccount = () => {
     }
 
 }
+
+export const useAdmin = ({ redirectTo }) => {
+    const { requireInstall } = useWeb3()
+    console.log(requireInstall)
+    
+    const {account} = useAccount()
+  
+    const router = useRouter()
+
+    useEffect(() => {
+
+        if ((
+            (requireInstall || !account.isAdmin && account.hasInitialResponse ) ||
+            account.isEmpty)
+
+        ) {
+            router.push(redirectTo)
+        }
+
+
+    }, [account])
+
+
+    return { account }
+
+}
+
+
 
 export const useNetwork = () => {
 
