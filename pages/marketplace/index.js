@@ -13,12 +13,12 @@ import { EthRates } from "@components/UI/web3"
 
 
 function Marketplace({ courses }) {
-    const { web3, isLoading, contract } = useWeb3(); // deconstruct the web3Api object and retreive it via useWeb3()
+    const { web3, isLoading, contract, provider } = useWeb3(); // deconstruct the web3Api object and retreive it via useWeb3()
 
     const [selectedCourse, setSelectedCourse] = useState(null)
     const { account } = useAccount()
     const { canPurchaseCourse } = useWalletnInfo()
-
+  
     const { walletInfo } = useWalletnInfo()
     // indentify  purchased courses
     

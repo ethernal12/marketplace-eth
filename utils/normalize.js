@@ -11,7 +11,7 @@ export const normalizeOwnedCourses = web3 => (course, ownedCourses) => {
 
 
     return {
-        ...course, // indvidual courses info
+        ...course, // indvidual courses info (title, etc.)
         ownedCourseId: ownedCourses.id,
         proof: ownedCourses.proof,
         ownedBy: ownedCourses.owner,

@@ -2,11 +2,13 @@
     "compilerOptions": {
             "baseUrl": ".", //root folder
             "paths": {
+                "@utils/*":["utils/*"],
                 "@pages/*": ["pages/*"], // /* marks all files in that folder
                 "@components/*":["components/*"],
                 "@styles/*":["styles/*"],
                 "@content/*":["content/*"],
-                "@contracts/*":["contracts/*"]
+                "@contracts/*":["contracts/*"],
+                
                 
             }
 

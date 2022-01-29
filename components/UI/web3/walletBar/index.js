@@ -1,10 +1,13 @@
 import { useAccount, useNetwork } from "@components/hooks/web3"
 import { useWeb3, Web3Provider } from "@components/providers"
-import Image from "next/image"
+
+
+import { CheckMarkImage } from "utils/checkMarkImage"
 
 export default function WalletBar() {
     const { account } = useAccount()
     const { network } = useNetwork()
+    console.log(network.data)
     const { isWeb3Loaded } = useWeb3()
     const install = "install"
     const connect = "connect to"
@@ -69,24 +72,20 @@ export default function WalletBar() {
                         {account.data && isWeb3Loaded &&
 
 
-                            <div className="flex items-center"><span className="px-2">Currently on: </span><strong className="text-2xl">
+                            <div className="flex items-center"><span className="px-2">Currently on: </span>
+                            <strong className="text-2xl">  {network.data}</strong>
 
 
-                                {network.data}</strong>
+
                                 {network.isSupported && network.data ?
-                                    <Image
-                                        layout="fixed"
-                                        width="35"
-                                        height="35"
-                                        src="/png-transparent-green-check-check-mark.png"
+                                    <CheckMarkImage
+                                        networkIsSupported = {network.isSupported}
+                                        networkData = {network.data}
 
                                     /> :
-                                    <Image
-                                        layout="fixed"
-                                        width="35"
-                                        height="35"
-                                        src="/red-cross-mark.fw.png"
-
+                                    <CheckMarkImage
+                                    
+                                    
                                     />
 
 

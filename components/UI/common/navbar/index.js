@@ -12,7 +12,7 @@ export default function Navbar() {
     const { connect, web3, isWeb3Loaded, isLoading } = useWeb3()
     //1st version
     // const _useAccount = useAccounts(web3); //returns the function
-    // const { account } = _useAccount() // deconstruct the function
+    // const { account } = _useAccount() // deconstructs the function
     //alternate version
     //const {account} = useAccounts(web3)() // calling the function twice because we are returning the function with a
     const { account } = useAccount() // hooks call the function setupHooks and passes the param. web3  which calls the useAccounts double function which returns the returning function on web3? condition
@@ -27,36 +27,36 @@ export default function Navbar() {
                 <nav className="relative" aria-label="Global">
                     <div className="flex justify-between items-center">
                         <div>
-                            <ActiveLink 
-                            href="/"
-                             >
+                            <ActiveLink
+                                href="/"
+                            >
                                 <a
 
                                     className="font-medium mr-8 text-indigo-600 ">Home
                                 </a>
                             </ActiveLink>
 
-                            <ActiveLink 
-                            href="/marketplace"
+                            <ActiveLink
+                                href="/marketplace"
                             >
                                 <a
 
                                     className="font-medium mr-8 text-indigo-600  ">Marketplace
                                 </a>
                             </ActiveLink>
-                            <ActiveLink 
-                            href="/wishlist"
-                            
-                             >
+                            <ActiveLink
+                                href="/wishlist"
+
+                            >
                                 <a
 
                                     className="font-medium mr-8 text-indigo-600 ">Wishlist
                                 </a>
                             </ActiveLink>
 
-                            <ActiveLink 
-                            href="/blogs"
-                             >
+                            <ActiveLink
+                                href="/blogs"
+                            >
                                 <a
 
                                     className="font-medium mr-8 text-indigo-600  ">Blogs

@@ -28,7 +28,7 @@ export default function MarketplaceHeader() {
 
 
     const {account} = useAccount()
-    console.log(account.isAdmin)
+ 
 
     return (
         <>

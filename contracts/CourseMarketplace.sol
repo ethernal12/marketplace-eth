@@ -1,7 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.9.0;
 
-
 contract Marketplace {
     enum State {
         Purchased,
@@ -24,12 +23,10 @@ contract Marketplace {
     //number of all courses and id of the courses
     uint256 totalCoursesOwned;
 
-    address payable private owner;
+    address payable public owner;
 
-    constructor(){
-
+    constructor() {
         setContractOwner(msg.sender);
-
     }
 
     //0x31343130343734
@@ -44,11 +41,14 @@ contract Marketplace {
         bytes32 proof
     ) external payable returns (bytes32) {
         bytes32 courseHash = keccak256(abi.encodePacked(courseId, msg.sender));
-        require(!checkOwner(courseHash), "You have already purchased this course!");
+        require(
+            !checkOwner(courseHash),
+            "You have already purchased this course!"
+        );
         uint256 id = totalCoursesOwned++;
         ownedCourseHash[id] = courseHash;
         ownedCourses[courseHash] = Course({
-            courseHash:courseHash,
+            courseHash: courseHash,
             id: id,
             price: msg.value,
             proof: proof,
@@ -59,58 +59,77 @@ contract Marketplace {
         return courseHash;
     }
 
-    function getCourse (bytes32 courseHash) //get course by hash
-    external
-    view 
-    returns(Course memory) {
+    function activateCourse(bytes32 courseHash) external onlyOwner {
+        require(
+            ownedCourses[courseHash].owner !=
+                0x0000000000000000000000000000000000000000,
+            "The owner is 0x0 address"
+        );
 
+        Course storage course = ownedCourses[courseHash];
+
+        require(
+            course.state == State.Purchased,
+            "Course is already activated!"
+        );
+
+        course.state = State.Activated;
+    }
+
+    function deactivateCourse(bytes32 courseHash) external onlyOwner {
+        require(
+            ownedCourses[courseHash].owner !=
+                0x0000000000000000000000000000000000000000,
+            "The owner is 0x0 address"
+        );
+
+        Course storage course = ownedCourses[courseHash];
+
+        require(
+            course.state == State.Activated,
+            "Course is already deactivated!"
+        );
+
+        (bool success, ) = course.owner.call{value: course.price}("");
+        require(success, "Transfer to owner of the course failed");
+
+        course.state = State.Deactivated;
+    }
+
+    function getCourse(
+        bytes32 courseHash //get course by hash
+    ) external view returns (Course memory) {
         return ownedCourses[courseHash];
     }
 
-    function getNumberOfCourses() external view returns(uint){
-    
-
-    return totalCoursesOwned;
-
+    function getNumberOfCourses() external view returns (uint256) {
+        return totalCoursesOwned;
     }
 
-    function getOwner() external view returns (address){
+    function getOwner() external view returns (address) {
         return owner;
     }
 
-    function getCourseHash(uint id) external view returns(bytes32){
-
-
+    function getCourseHash(uint256 id) external view returns (bytes32) {
         return ownedCourseHash[id];
     }
 
-    function checkOwner(bytes32 courseHash) private view returns(bool){
-    
+    function checkOwner(bytes32 courseHash) private view returns (bool) {
         address courseOwner = ownedCourses[courseHash].owner;
-        
 
         return courseOwner == msg.sender;
-        
-    
     }
 
-    function transferOwnership(address newOwner)external onlyOwner{
-
+    function transferOwnership(address newOwner) external onlyOwner {
         setContractOwner(newOwner);
     }
 
     function setContractOwner(address newOwner) private {
-
         owner = payable(newOwner);
     }
 
-    modifier onlyOwner(){
-
+    modifier onlyOwner() {
         require(msg.sender == owner, "Only owner");
         _;
     }
-
-
-
-
 }

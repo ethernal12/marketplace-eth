@@ -3,12 +3,10 @@ import { Button, Message } from "@components/UI/common";
 import { MarketplaceHeader } from "@components/UI/common/marketplace";
 import { CourseFilter, ManageCourseCard } from "@components/UI/course";
 import { BaseLayout } from "@components/UI/layout";
-import { useAccount, useAdmin, useManageCourses } from "@components/hooks/web3";
+import { useAdmin, useManageCourses } from "@components/hooks/web3";
 import { useState } from "react";
 import { compareProof } from "utils/compareProof";
 import { useWeb3 } from "@components/providers";
-
-
 
 
 export const VerificationInput = ({ onVerify }) => {
@@ -41,12 +39,11 @@ export const VerificationInput = ({ onVerify }) => {
 export default function ManageCourses() {
 
   const { account } = useAdmin({ redirectTo: "/marketplace" })
-  
-
+  const { contract } = useWeb3()
   const { manageCourses } = useManageCourses(account)
   const { web3 } = useWeb3()
   const [proofedOwnership, setProofedOwnership] = useState({})
-
+  
   const verifyCourse = (email, { hash, proof }) => {
 
     compareProof(web3)(hash, email, proof) ? // check if courseHash + email === hash
@@ -63,8 +60,38 @@ export default function ManageCourses() {
 
 
   }
-  if(!account.isAdmin){
+  if (!account.isAdmin) {
     return null
+  }
+
+
+  const activateCourse = async (course) => {
+    
+    try {
+      await contract.methods.
+        activateCourse(course).
+        send({ from: account.data })
+
+    } catch (error) {
+      alert("The course activation unsuccessful " + error)
+    }
+
+
+  }
+
+  const deactivateCourse = async (course) => {
+  
+    
+    try {
+      await contract.methods.
+        deactivateCourse(course).
+        send({ from: account.data })
+
+    } catch (error) {
+      alert("The course deactivation unsuccessful " + error)
+    }
+
+
   }
 
   return (
@@ -79,6 +106,7 @@ export default function ManageCourses() {
         {manageCourses.data?.map(course =>
 
           <ManageCourseCard
+
             key={course.ownedCourseId}
             course={course}
 
@@ -117,6 +145,19 @@ export default function ManageCourses() {
               </div>
 
             }
+            <Button className="mt-2 mr-2" variant = "green"
+              onClick={() => activateCourse(course.courseHash)}
+            >
+              Activate course
+            </Button>
+
+            <Button className="mt-2 mr-2" variant = "red"
+              onClick={() => deactivateCourse(course.courseHash)}
+            >
+              Deactivate course
+            </Button>
+
+
 
           </ManageCourseCard>
 

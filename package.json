@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@metamask/detect-provider": "^1.2.0",
+    "@openzeppelin/test-helpers": "^0.5.15",
     "dotenv": "^10.0.0",
     "eslint-import-resolver-typescript": "^2.5.0",
     "next": "12.0.7",

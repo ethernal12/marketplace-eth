@@ -11,9 +11,6 @@ export const handler = (web3, contract) => (course, account) => {
         async () => {
             const ownedCourses = []
 
-
-           
-           
             const courseHash = createCourseHash(web3)(course.id, account)
 
 
@@ -23,8 +20,6 @@ export const handler = (web3, contract) => (course, account) => {
                 return null
               
             }
-
-
 
             return normalizeOwnedCourses(web3)(course, ownedCourse)
 
