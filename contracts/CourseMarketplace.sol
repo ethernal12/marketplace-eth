@@ -29,10 +29,15 @@ contract Marketplace {
         setContractOwner(msg.sender);
     }
 
+
+
+      /// Cannot activate deactivated course, must me repurchased first!
+      error DeactivateCourse();
+
     //0x31343130343734
     //0x5B38Da6a701c568545dCfcB03FcB875f56beddC4
-    //0x00000000000000000000000000000313
-    //0x0000000000000000000000000000000000000000000000000000000000003130
+    //0x00000000000000000000000000000313 course id bytes16
+    //0x0000000000000000000000000000000000000000000000000000000000003130 course proof bytes32
     //address + courseId = 000000000000000000000000000031305B38Da6a701c568545dCfcB03FcB875f56beddC4
 
     //keccak256(abi.encodePacked(0xc4eaa3558504e2baa2669001b43f359b8418b44a4477ff417b4b007d7cc86e37))
@@ -59,14 +64,34 @@ contract Marketplace {
         return courseHash;
     }
 
-    function activateCourse(bytes32 courseHash) external onlyOwner {
-        require(
-            ownedCourses[courseHash].owner !=
-                0x0000000000000000000000000000000000000000,
-            "The owner is 0x0 address"
-        );
+    function repurchaseCourse(bytes32 courseHash)
+        external
+        payable
+        isCourseCreated(courseHash)
+    {
 
+        require(checkOwner(courseHash), "You are not the owner of the course, can`t repurchase");
         Course storage course = ownedCourses[courseHash];
+
+        require(
+            course.state == State.Deactivated,
+            "To purchase the course the state must be Deactivated"
+        );
+        course.state = State.Purchased;
+        course.price = msg.value;
+    }
+
+    function activateCourse(bytes32 courseHash)
+        external
+        onlyOwner
+        isCourseCreated(courseHash)
+    {
+        Course storage course = ownedCourses[courseHash];
+
+        if(course.state == State.Deactivated){
+
+            revert DeactivateCourse();
+        }
 
         require(
             course.state == State.Purchased,
@@ -76,17 +101,15 @@ contract Marketplace {
         course.state = State.Activated;
     }
 
-    function deactivateCourse(bytes32 courseHash) external onlyOwner {
-        require(
-            ownedCourses[courseHash].owner !=
-                0x0000000000000000000000000000000000000000,
-            "The owner is 0x0 address"
-        );
-
+    function deactivateCourse(bytes32 courseHash)
+        external
+        onlyOwner
+        isCourseCreated(courseHash)
+    {
         Course storage course = ownedCourses[courseHash];
 
         require(
-            course.state == State.Activated,
+            course.state != State.Deactivated,
             "Course is already deactivated!"
         );
 
@@ -94,7 +117,14 @@ contract Marketplace {
         require(success, "Transfer to owner of the course failed");
 
         course.state = State.Deactivated;
+        course.price = 0;
     }
+
+    function transferOwnership(address newOwner) external onlyOwner {
+        setContractOwner(newOwner);
+    }
+
+    //------------------------------------------------------helper functions----------------------------------------------
 
     function getCourse(
         bytes32 courseHash //get course by hash
@@ -120,16 +150,22 @@ contract Marketplace {
         return courseOwner == msg.sender;
     }
 
-    function transferOwnership(address newOwner) external onlyOwner {
-        setContractOwner(newOwner);
-    }
-
     function setContractOwner(address newOwner) private {
         owner = payable(newOwner);
     }
 
+    //------------------------------------------------------modifiers----------------------------------------------
     modifier onlyOwner() {
         require(msg.sender == owner, "Only owner");
+        _;
+    }
+
+    modifier isCourseCreated(bytes32 _courseHash) {
+        require(
+            ownedCourses[_courseHash].owner !=
+                0x0000000000000000000000000000000000000000,
+            "The course purchase does not exist!"
+        );
         _;
     }
 }
