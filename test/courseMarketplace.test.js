@@ -232,7 +232,7 @@ contract("MarketplaceCourse", accounts => {
 
             assert.equal(ownedCourse.state, 2, "The course state should be Deactivated")
             assert.equal(ownedCourse.price, 0, "The course price should be 0")
-            //after deactiovation return value to costumer1 ? 
+            //after deactiovation return value to costumer1 ?
             assert.equal(toBN(balanceBeforeTX).add(toBN(value)).toString(), balanceAfterTX, "the balance of costumer1 after deactivation is not correct")
             //after deactivation subtract value from the contract ? 
             assert.equal(toBN(balanceContractBeforeTX).add(toBN(value)).toString(), balanceContractAfterTX, "the balance of contract after deactivation is not correct!")
@@ -302,7 +302,7 @@ contract("MarketplaceCourse", accounts => {
 
             )
             //the contracts balance after course repurchase?
-            assert.equal(toBN(balanceContractBeforeTX).sub(toBN(balanceContractAfterTX)).sub(toBN(gas)).toString(), value,
+            assert.equal(toBN(balanceContractBeforeTX).add(toBN(value)).toString(), balanceContractAfterTX,
                 "the contract balances do NOT match"
 
             )
