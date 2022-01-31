@@ -20,7 +20,7 @@ contract Marketplace {
     mapping(bytes32 => Course) private ownedCourses;
 
     mapping(uint256 => bytes32) private ownedCourseHash;
-    //number of all courses and id of the courses
+    
     uint256 totalCoursesOwned;
 
     address payable public owner;
@@ -34,15 +34,9 @@ contract Marketplace {
       /// Cannot activate deactivated course, must me repurchased first!
       error DeactivateCourse();
 
-    //0x31343130343734
-    //0x5B38Da6a701c568545dCfcB03FcB875f56beddC4
-    //0x00000000000000000000000000000313 course id bytes16
-    //0x0000000000000000000000000000000000000000000000000000000000003130 course proof bytes32
-    //address + courseId = 000000000000000000000000000031305B38Da6a701c568545dCfcB03FcB875f56beddC4
-
-    //keccak256(abi.encodePacked(0xc4eaa3558504e2baa2669001b43f359b8418b44a4477ff417b4b007d7cc86e37))
+  
     function purchaseCourse(
-        bytes16 courseId, // 10 ascii - 3130 hex => 0x00000000000000000000000000003130 + 0x => 32 chars      0xc4eaa3558504e2baa2669001b43f359b8418b44a4477ff417b4b007d7cc86e37
+        bytes16 courseId, // 10 ascii - 3130 hex => 0x00000000000000000000000000003130 + 0x => 32 chars     
         bytes32 proof
     ) external payable returns (bytes32) {
         bytes32 courseHash = keccak256(abi.encodePacked(courseId, msg.sender));
@@ -124,7 +118,7 @@ contract Marketplace {
         setContractOwner(newOwner);
     }
 
-    //------------------------------------------------------helper functions----------------------------------------------
+    //------------------------------------------------------getter functions----------------------------------------------
 
     function getCourse(
         bytes32 courseHash //get course by hash
