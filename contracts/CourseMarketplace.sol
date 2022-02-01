@@ -20,7 +20,7 @@ contract Marketplace {
     mapping(bytes32 => Course) private ownedCourses;
 
     mapping(uint256 => bytes32) private ownedCourseHash;
-    
+
     uint256 totalCoursesOwned;
 
     address payable public owner;
@@ -29,14 +29,11 @@ contract Marketplace {
         setContractOwner(msg.sender);
     }
 
+    /// Cannot activate deactivated course, must me repurchased first!
+    error DeactivateCourse();
 
-
-      /// Cannot activate deactivated course, must me repurchased first!
-      error DeactivateCourse();
-
-  
     function purchaseCourse(
-        bytes16 courseId, // 10 ascii - 3130 hex => 0x00000000000000000000000000003130 + 0x => 32 chars     
+        bytes16 courseId, // 10 ascii - 3130 hex => 0x00000000000000000000000000003130 + 0x => 32 chars
         bytes32 proof
     ) external payable returns (bytes32) {
         bytes32 courseHash = keccak256(abi.encodePacked(courseId, msg.sender));
@@ -63,8 +60,10 @@ contract Marketplace {
         payable
         isCourseCreated(courseHash)
     {
-
-        require(checkOwner(courseHash), "You are not the owner of the course, can`t repurchase");
+        require(
+            checkOwner(courseHash),
+            "You are not the owner of the course, can`t repurchase"
+        );
         Course storage course = ownedCourses[courseHash];
 
         require(
@@ -82,8 +81,7 @@ contract Marketplace {
     {
         Course storage course = ownedCourses[courseHash];
 
-        if(course.state == State.Deactivated){
-
+        if (course.state == State.Deactivated) {
             revert DeactivateCourse();
         }
 
@@ -116,6 +114,13 @@ contract Marketplace {
 
     function transferOwnership(address newOwner) external onlyOwner {
         setContractOwner(newOwner);
+    }
+
+    function withdrawFunds(uint amount) external onlyOwner {
+        uint256 contractFunds = address(this).balance;
+        require(contractFunds >= amount , "The withdraw amount is exceeding the contracts balance");
+        (bool success, ) = owner.call{value: amount}("");
+        require(success, "The transfer of funds was not successful!");
     }
 
     //------------------------------------------------------getter functions----------------------------------------------

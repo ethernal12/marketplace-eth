@@ -1,7 +1,6 @@
 const MarketplaceCourse = artifacts.require("Marketplace")
 const { expectRevert } = require('@openzeppelin/test-helpers');
 const { web3 } = require('@openzeppelin/test-helpers/src/setup');
-const { Result } = require('postcss');
 const { catchRevert } = require("./utils/exceptions")
 contract("MarketplaceCourse", accounts => {
 
@@ -10,7 +9,7 @@ contract("MarketplaceCourse", accounts => {
 
     const [owner, costumer1, costumer2, costumer3, owner2] = [accounts[0], accounts[1], accounts[2], accounts[3], accounts[4]]
     const toBN = value => web3.utils.toBN(value)
-    const getBalance = async address =>  web3.eth.getBalance(costumer1)
+    const getBalance = async address => web3.eth.getBalance(address)
 
     const getGas = async result => {
 
@@ -34,6 +33,9 @@ contract("MarketplaceCourse", accounts => {
     const proof2 = "0x0000000000000000000000000000213000000000000000000000000000002130"
     const value = "9000000000000000"
     const hash = "0x0000000000000000000000000000000000000000000000000000000000000000"
+    const withdrawFundsValue = "90000000000"
+    let exceedingValue =""
+    const value2 = "10000"
     let courseHashContract;
 
     before(async () => {
@@ -46,7 +48,7 @@ contract("MarketplaceCourse", accounts => {
 
 
         before(async () => {
-          
+
 
 
             await _contract.purchaseCourse(courseID, proof,
@@ -56,14 +58,14 @@ contract("MarketplaceCourse", accounts => {
                 })
 
 
-          
+
 
 
         })
 
         it("should NOT be able to purchase the course twice", async () => {
-         
-        
+
+
 
             await expectRevert(_contract.purchaseCourse(courseID, proof,
                 {
@@ -142,7 +144,7 @@ contract("MarketplaceCourse", accounts => {
 
 
         })
-        //-------------------------------------------transfer ownership of the contract or the course ?-----------------------------
+
         it("should transfer ownership", async () => {
 
             await _contract.transferOwnership(owner2, { from: owner })
@@ -164,7 +166,7 @@ contract("MarketplaceCourse", accounts => {
 
             assert.equal(oldOwner, owner, `new owner should be owner2`)
 
-            
+
 
         })
     })
@@ -207,7 +209,7 @@ contract("MarketplaceCourse", accounts => {
 
         })
 
-    
+
 
         it("should be able to deactivate the course purchase", async () => {
             const balanceBeforeTX = await getBalance(costumer1)
@@ -221,24 +223,20 @@ contract("MarketplaceCourse", accounts => {
             const balanceOwnerAfterTX = await getBalance(owner)
 
             const gas = await getGas(result)
-           
 
-            console.log(balanceOwnerBeforeTX + " balanceOwnerBeforeTX")
-            console.log(balanceOwnerAfterTX + " balanceOwnerAfterTX")
-            console.log(gas + " gasUsed")
 
             const ownedCourse = await _contract.getCourse(courseHash2)
 
 
             assert.equal(ownedCourse.state, 2, "The course state should be Deactivated")
             assert.equal(ownedCourse.price, 0, "The course price should be 0")
-            //after deactiovation return value to costumer1 ?
-            assert.equal(toBN(balanceBeforeTX).add(toBN(value)).toString(), balanceAfterTX, "the balance of costumer1 after deactivation is not correct")
-            //after deactivation subtract value from the contract ? 
-            assert.equal(toBN(balanceContractBeforeTX).add(toBN(value)).toString(), balanceContractAfterTX, "the balance of contract after deactivation is not correct!")
-            assert.equal(toBN(balanceOwnerBeforeTX).add(toBN(value)).toString(), balanceOwnerAfterTX, "the balance of owner is not correct after deactivation")
 
-            //----------------------after deactivation the value is returned to the costumer, added to the contracts balance and the owners balance ? ---------------------------------
+            assert.equal(toBN(balanceBeforeTX).add(toBN(value)).toString(), balanceAfterTX, "the balance of costumer1 after deactivation is not correct")
+
+            assert.equal(toBN(balanceContractBeforeTX).sub(toBN(value)).toString(), balanceContractAfterTX, "the balance of contract after deactivation is not correct!")
+            assert.equal(toBN(balanceOwnerBeforeTX).sub(gas).toString(), balanceOwnerAfterTX, "the balance of owner is not correct after deactivation")
+
+
 
         })
         it("should NOT be able to activate deactivated course", async () => {
@@ -281,32 +279,68 @@ contract("MarketplaceCourse", accounts => {
 
 
             const gas = await getGas(result)
-            console.log(fromWei(gas) + " gas used for purchasing course")
+            
 
             let balanceAfterTX = await getBalance(costumer1)
             let balanceContractAfterTX = await getBalance(_contract.address)
 
 
-            // console.log(toBN(balanceContractAfterTX).sub(toBN(balanceContractBeforeTX).sub(toBN(gas))).toString() + " is equal to value ")
 
-            // console.log(balanceContractBeforeTX + " balanceContractBeforeTX")
-            // console.log(balanceContractAfterTX + " balanceContractAfterTX")
-            // console.log(fromWei(value) + " value")
             const ownedCourse = await _contract.getCourse(courseHash2)
 
-            
+
             assert.equal(ownedCourse.state, 0, "repurchased course state must be Purchased")
             assert.equal(ownedCourse.price, value, "repurchased course price must be value")
             assert.equal(toBN(balanceBeforeTX).sub(toBN(value)).sub(gas).toString(), balanceAfterTX,
                 "the balances do NOT match"
 
             )
-            //the contracts balance after course repurchase?
+
             assert.equal(toBN(balanceContractBeforeTX).add(toBN(value)).toString(), balanceContractAfterTX,
                 "the contract balances do NOT match"
 
             )
-            //----------------------after repurchase the value is not added to the contracts balance but is subtracted from the buyers balance  ?? ---------------------------------
+
+        })
+
+    })
+
+    describe("transfer contract funds", () => {
+
+        it("only owner should be able to withdraw funds", async () => {
+
+            await expectRevert(_contract.withdrawFunds(owner, { from: costumer1 }),
+                "Only owner"
+
+            )
+        })
+
+        it("only withdraw funds is contract balance exceeds the withdraw value", async () => {
+
+            const contractsBalance = await web3.eth.getBalance(_contract.address)
+            
+            exceedingValue = toBN(contractsBalance).add(toBN(value2))
+           
+
+            await expectRevert(_contract.withdrawFunds(exceedingValue, { from: owner }),
+                "The withdraw amount is exceeding the contracts balance"
+
+            )
+        })
+
+        it("should be able to withdraw funds", async () => {
+            const balanceOwnerBeforeTX = await getBalance(owner)
+
+            const result = await _contract.withdrawFunds(withdrawFundsValue, { from: owner })
+            const gas = await getGas(result)
+            
+            const balanceOwnerAfterTX = await getBalance(owner)
+            
+           
+            assert.equal(toBN(balanceOwnerBeforeTX).add(toBN(withdrawFundsValue)).sub(gas).toString(), balanceOwnerAfterTX)
+
+            
+
         })
 
     })
