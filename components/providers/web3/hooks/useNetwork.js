@@ -14,6 +14,8 @@ export const handler = (web3, provider) => () => {
         1337: "Ganache"
 
     }
+
+    
     const targetNetwork = NETWORKS[process.env.NEXT_PUBLIC_TARGET_CHAIN_ID]
 
     const {data, mutate, ...rest } = useSWR(() =>
@@ -36,7 +38,7 @@ export const handler = (web3, provider) => () => {
 
     useEffect(() => {
 
-        const mutator = chainId => mutate(NETWORKS[parseInt(chainId, 16)]) // convert to int, from hex
+        const mutator = chainId => window.location.reload()
         
             provider?.on("chainChanged", mutator) // mutate will return the new account every time it is changed
 

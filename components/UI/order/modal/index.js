@@ -91,12 +91,12 @@ export default function OrderModal({ course, onClose, onSubmit }) {
                         <div className="mt-3 sm:mt-0 sm:ml-4 sm:text-left">
                             <h3 className="mb-7 text-lg font-bold leading-6 text-gray-900" id="modal-title">
 
-                                {course.title}
+                                {course.title} fasfasf 
                             </h3>
                             {/* -------------------------set price value -------------------------------*/}
                             <div className="mt-1 relative rounded-md">
                                 <div className="mb-1">
-                                    <label className="mb-2 font-bold">Price(eth)</label>
+                                    <label className="mb-2 font-bold">Price(eth) sdadsadf</label>
                                     <div className="text-xs text-gray-700 flex">
                                         <label className="flex items-center mr-2">
                                             <input

@@ -7,7 +7,7 @@ import { CheckMarkImage } from "utils/checkMarkImage"
 export default function WalletBar() {
     const { account } = useAccount()
     const { network } = useNetwork()
-    console.log(network.data)
+   
     const { isWeb3Loaded } = useWeb3()
     const install = "install"
     const connect = "connect to"

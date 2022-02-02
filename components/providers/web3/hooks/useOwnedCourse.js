@@ -7,7 +7,7 @@ export const handler = (web3, contract) => (course, account) => {
 
 
     const swrRes = useSWR(() =>
-        (web3 && account && contract) ? `web3/ownedCourses/${account}` : null,
+        (web3 && account && contract) ? `web3/ownedCourse/${account}` : null,
         async () => {
             const ownedCourses = []
 

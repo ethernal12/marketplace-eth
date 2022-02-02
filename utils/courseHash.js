@@ -5,10 +5,7 @@ export const createCourseHash = web3 => (courseId, account) => {
         { type: "bytes16", value: hexCourseId }
         , { type: "address", value: account })
 
-        return (
-
-
-            courseHash
-        )
+        return courseHash
+        
 
 }

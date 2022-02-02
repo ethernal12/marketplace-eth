@@ -3,55 +3,66 @@ import { CourseCard } from "@components/UI/course"
 import { BaseLayout } from '@components/UI/layout'
 import { getAllCourses } from '@content/courses/fetcher'
 import { useWeb3 } from '@components/providers'
-import { useWalletnInfo, useAccount, useOwnedCourses } from "@components/hooks/web3"
-import { Button } from "@components/UI/common"
+import { useWalletnInfo, useAccount, useOwnedCourses, useNetwork } from "@components/hooks/web3"
+import { Button, Loader, Message } from "@components/UI/common"
 import { OrderModal } from "@components/UI/order"
 import { useState } from "react"
 import { MarketplaceHeader } from "@components/UI/common/marketplace"
-import { EthRates } from "@components/UI/web3"
+import { createCourseHash } from "@utils/courseHash"
+import { createProof } from "@utils/createProof"
 
 
 
 function Marketplace({ courses }) {
-    const { web3, isLoading, contract, provider } = useWeb3(); // deconstruct the web3Api object and retreive it via useWeb3()
+    const { web3, isLoading, contract, requireInstall } = useWeb3(); // deconstruct the web3Api object and retreive it via useWeb3()
 
     const [selectedCourse, setSelectedCourse] = useState(null)
     const { account } = useAccount()
-    const { canPurchaseCourse } = useWalletnInfo()
-  
+    const { isSupported } = useNetwork()
+    const { hasConnectedWallet, isConnecting } = useWalletnInfo()
+    const {network} = useNetwork()
     const { walletInfo } = useWalletnInfo()
     // indentify  purchased courses
-    
-    const { ownedCourses } = useOwnedCourses(courses, account.data)
+
+    const { ownedCourses } = useOwnedCourses(courses, account.data, network.data)
 
     const purchaseCourse = async order => {
+
+
+
         const courseIdToHex = web3.utils.utf8ToHex(selectedCourse.id)
 
-        console.log(courseIdToHex)
-
-        const orderHash = web3.utils.soliditySha3(
-            { type: "bytes16", value: courseIdToHex },
-            { type: "address", value: account.data })
-
-
-
-        const emailHash = web3.utils.sha3(order.email)
         const coursePrice = web3.utils.toWei(String(order.price))
 
-        const proof = web3.utils.soliditySha3(
-            { type: "bytes32", value: orderHash },
-            { type: "bytes32", value: emailHash }
-        )
+        const orderHash = createCourseHash(web3)(selectedCourse.id, account.data)
+        const createCourseProof = createProof(web3)(orderHash, order.email)
+        
+
+
         try {
             await contract.methods.purchaseCourse(
                 courseIdToHex,
-                proof
+                createCourseProof
             ).send({ from: account.data, value: coursePrice })
 
         } catch (error) {
             alert("Data was not sent to the blockhain " + error)
         }
 
+    }
+
+
+    const repurchaseCourse = async order => {
+        const orderHash = createCourseHash(web3)(selectedCourse.id, account.data)
+        try {
+
+
+            await contract.methods.repurchaseCourse(orderHash)
+                .send({ from: account.data })
+
+        } catch (error) {
+
+        }
     }
 
     return (
@@ -62,7 +73,7 @@ function Marketplace({ courses }) {
             {/* {isLoading ? "Is loading web3" : web3 ? "Web3 Ready" : "Please install Metamask"} */}
             <div className="py-4">
                 <MarketplaceHeader />
-
+                    
 
             </div>
 
@@ -71,40 +82,166 @@ function Marketplace({ courses }) {
 
                 courses={courses} >
                 {/* // callback function is passed to the courseList and return courseCard as children */}
-               
+
                 {course => <CourseCard
-                 
+
                     key={course.id}
                     course={course}
-                    disabled={!walletInfo} // if network.data && network.isSupported &&
-                  
-                    Footer={() =>
+                    disabled={!hasConnectedWallet} // if network.data && network.isSupported &&
 
-                        <div className="mt-4">
+                    Footer={() => {
 
 
+                        if (!ownedCourses.hasInitialResponse) {
+                            return (
+                                <div className="mt-4 ">
+                                   
+                                    <Loader size="md" />
+                                    <Button
+                                        disabled={true}
 
-                            <Button
-                                disabled={!walletInfo}
-                                onClick={() => setSelectedCourse(course)}
-                                variant="lightPurple">
+                                        variant="lightPurple">
 
-                                Purchase
-                            </Button>
-
+                                        Loading state...
+                                    </Button>
+                                </div>
+                            )
 
 
 
+                        }
 
 
-                        </div>
- 
+
+
+                        const owned = ownedCourses.lookupTable[course.id]
+                       
+
+                        if (owned) {
+                            return (
+
+                                <>
+                                <div className="mt-4 ">
+                                 
+                                    <Button
+                                        disabled={true}
+                                        variant="orange">
+
+                                        Owned
+                                    </Button>
+                                </div>
+                                    <div className="pt-1">
+
+
+                                    {owned.state === "purchased" && 
+                                <Message type = "warning" size = "sm">
+
+                                    Purchased
+                                </Message>
+                                
+                                }
+                                 {owned.state === "activated" && 
+                                <Message type = "success" size = "sm">
+
+                                    Activated
+                                </Message>
+                                
+                                }
+                                  {owned.state === "deactivated" && 
+                                <Message type = "danger" size = "sm">
+
+                                    Deactivated
+                                </Message>
+                                
+                                }
+                                    </div>
+                           
+
+
+                                </>
+                            )
+
+
+
+                        }
+
+                        if (!hasConnectedWallet) {
+
+                            return (
+                                <div className="mt-4 ">
+                                    <Button
+                                        disabled={true}
+
+                                        variant="lightPurple">
+
+                                        Install
+                                    </Button>
+                                </div>
+                            )
+                        }
+
+                        if (isConnecting) {
+
+                            return (
+
+                                <div>
+                                    <Button
+                                        disabled={true}
+
+                                        variant="lightPurple">
+
+                                        <Loader size="sm" />
+                                    </Button></div>
+                            )
+
+
+
+                        }
+
+                        return (
+
+
+                            <div className="mt-4 flex">
+
+
+
+                                <div>
+                                    <Button
+                                        disabled={!hasConnectedWallet}
+                                        onClick={() => setSelectedCourse(course)}
+                                        variant="lightPurple">
+
+                                        Purchase
+                                    </Button></div>
+                                {/* if course is deactivated and you are the owner, show the button */}
+
+                                <div className="ml-2" >
+                                    <Button
+                                        disabled={!hasConnectedWallet}
+                                        onClick={() => setSelectedCourse(course)}
+                                        variant="lightGreen">
+
+
+                                        Repurchase
+                                    </Button>
+                                </div>
+
+
+                            </div>
+
+                        )
+
                     }
-                   
-                />}
-              
+
+                    }
+                />
+
+                }
+
+
+
             </CourseList>
-         
+
             {/* only content from modal */}
             {
                 selectedCourse &&

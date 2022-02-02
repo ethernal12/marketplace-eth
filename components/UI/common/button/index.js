@@ -7,9 +7,12 @@ export default function Button({
 }) {
     const variants = {
         green:`text-white bg-green-600 ${hovarable && "hover:bg-green-800"}`,
+        lightGreen:`text-white bg-green-400 ${hovarable && "hover:bg-green-800"}`,
         purple:`text-white bg-indigo-600 ${hovarable && "hover:bg-indigo-800"}`,
+        lightPurple:`text-indigo-600 bg-indigo-100 ${hovarable && "hover:bg-indigo-300"}`,
+        orange:`text-white bg-amber-600 ${hovarable && "hover:bg-amber-300"}`, 
         red:`text-white bg-red-600 ${hovarable && "hover:bg-red-800"}`,
-        lightPurple:`text-indigo-600 bg-indigo-100 ${hovarable && "hover:bg-indigo-300"}`
+        
     }
 
     return (

@@ -43,7 +43,7 @@ export default function ManageCourses() {
   const { manageCourses } = useManageCourses(account)
   const { web3 } = useWeb3()
   const [proofedOwnership, setProofedOwnership] = useState({})
-  
+
   const verifyCourse = (email, { hash, proof }) => {
 
     compareProof(web3)(hash, email, proof) ? // check if courseHash + email === hash
@@ -64,35 +64,22 @@ export default function ManageCourses() {
     return null
   }
 
+  const changeCourseState = async (courseHash, method) => {
 
-  const activateCourse = async (course) => {
-    
     try {
-      await contract.methods.
-        activateCourse(course).
+      await contract.methods[method](courseHash).
         send({ from: account.data })
 
     } catch (error) {
-      alert("The course activation unsuccessful " + error)
+      
+      alert(`The ${method} unsuccessful`  + error)
     }
-
 
   }
 
-  const deactivateCourse = async (course) => {
+  console.log(manageCourses)
+
   
-    
-    try {
-      await contract.methods.
-        deactivateCourse(course).
-        send({ from: account.data })
-
-    } catch (error) {
-      alert("The course deactivation unsuccessful " + error)
-    }
-
-
-  }
 
   return (
     <>
@@ -145,14 +132,14 @@ export default function ManageCourses() {
               </div>
 
             }
-            <Button className="mt-2 mr-2" variant = "green"
-              onClick={() => activateCourse(course.courseHash)}
+            <Button className="mt-2 mr-2" variant="green"
+              onClick={() => changeCourseState(course.courseHash, "activateCourse")}
             >
               Activate course
             </Button>
 
-            <Button className="mt-2 mr-2" variant = "red"
-              onClick={() => deactivateCourse(course.courseHash)}
+            <Button className="mt-2 mr-2" variant="red"
+              onClick={() => changeCourseState(course.courseHash, "deactivateCourse")}
             >
               Deactivate course
             </Button>

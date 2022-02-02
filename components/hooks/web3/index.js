@@ -51,7 +51,7 @@ export const useAccount = () => {
 
 export const useAdmin = ({ redirectTo }) => {
     const { requireInstall } = useWeb3()
-    console.log(requireInstall)
+    
     
     const {account} = useAccount()
   
@@ -135,12 +135,14 @@ export const useManageCourses = (...args) => {
 export const useWalletnInfo = () => {
     const { account } = useAccount()
     const { network } = useNetwork()
+    const isConnecting = !account.hasInitialResponse && !network.hasInitialResponse
 
 
     return {
         account,
         network,
-        walletInfo: !!(network.data && network.isSupported), // !! if one of the conditions is undefined || null it returnes false instead of undefined or null
+        isConnecting,
+        hasConnectedWallet: !!(account.data && network.isSupported), // !! if one of the conditions is undefined || null it returnes false instead of undefined or null
 
     }
 

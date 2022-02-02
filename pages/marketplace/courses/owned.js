@@ -1,5 +1,5 @@
 
-import { useAccount, useNetwork, useOwnedCourses } from "@components/hooks/web3";
+import { useOwnedCourses, useWalletnInfo } from "@components/hooks/web3";
 import { useWeb3 } from "@components/providers";
 import { Button, Loader, Message } from "@components/UI/common";
 import { MarketplaceHeader } from "@components/UI/common/marketplace";
@@ -10,8 +10,8 @@ import Link from "next/link"
 
 
 export default function OwnedCourses({ courses }) {
-    const { network } = useNetwork()
-    const { account } = useAccount()
+    
+    const { account} = useWalletnInfo()
     const { ownedCourses } = useOwnedCourses(courses, account.data)
     const { isLoading } = useWeb3()
 

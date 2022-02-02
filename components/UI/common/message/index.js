@@ -1,27 +1,34 @@
 import { useState } from "react"
-
 const TYPES = {
     success: "green",
-    warning: "red",
+    warning: "teal",
     danger: "red"
 }
 
-export default function Message({ children, type = "success" }) {
 
+const SIZES = {
+    sm: "text-sm",
+    md: "text-base",
+    lg: "text-lg"
+  }
+
+export default function Message({ children, type = "success", size = "md" }) {
+
+   
     const [isDisplayed, setIsDisplayed] = useState(true)
 
 
 
     const messageType = TYPES[type]
-
+    const messageSizeClass = SIZES[size]
     if (!isDisplayed) { return null }
 
     return (
         <div className={`bg-${messageType}-100 rounded-xl mb-3`}>
-            <div className="max-w-7xl mx-auto py-3 px-3 sm:px-3 lg:px-3">
+            <div className="max-w-7xl mx-auto py-2 px-1 sm:px-3 lg:px-3">
                 <div className="flex items-center justify-between flex-wrap">
                     <div className="w-0 flex-1 flex items-center">
-                        <div className="ml-3 font-medium text-green-900 truncate">
+                        <div className={`ml-3 ${messageSizeClass} font-medium text-${messageType}-900`}>
                             <span className=" md:inline">
                                 {children}
                             </span>
