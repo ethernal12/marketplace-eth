@@ -1,4 +1,8 @@
 
+require('dotenv').config()
+
+const HDWalletProvider = require("@truffle/hdwallet-provider");
+const web3  = require('web3');
 
 module.exports = {
 
@@ -11,8 +15,20 @@ module.exports = {
       port: 7545,            // Standard Ethereum port (default: none)
       network_id: "*",       // Any network (default: none)
     },
+    ropsten: {
+      provider: function () {
+  
+          return new HDWalletProvider(process.env.MNEMONIC, "https://ropsten.infura.io/v3/" + process.env.INFURAROP )
+          },
+      network_id: 3,
+      gas: 3000000,
+      gasPrice:web3.utils.toWei("10", "Gwei"),
+      skipDryRun: true,
+      from:""
+  }
 
   },
+ 
 
 
 

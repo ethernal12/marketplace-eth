@@ -435,6 +435,15 @@ contract("MarketplaceCourse", accounts => {
 
         })
 
+        it("contract should have bytecode of 0x", async () => {
+
+            const byteCode = await web3.eth.getCode(_contract.address)
+
+
+            assert.equal(byteCode, "0x", "the contract has not self destructed, bytecode NOT 0x!")
+
+        })
+
 
 
 
