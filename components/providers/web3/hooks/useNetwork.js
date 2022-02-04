@@ -1,8 +1,6 @@
-import { useEffect } from "react";
-import useSWR, { mutate } from "swr";
+import useSWR from "swr"
 
-
-export const handler = (web3, provider) => () => {
+export const handler = (web3) => () => {
 
     const NETWORKS = {
         1: "Etehreum Main Network",
@@ -18,9 +16,7 @@ export const handler = (web3, provider) => () => {
     
     const targetNetwork = NETWORKS[process.env.NEXT_PUBLIC_TARGET_CHAIN_ID]
 
-    const {data, mutate, ...rest } = useSWR(() =>
-
-        web3 ? "web3/network" : null,
+    const {data, ...rest } = useSWR(() => web3 ? "web3/network" : null,
 
         async () => {
             
@@ -36,23 +32,7 @@ export const handler = (web3, provider) => () => {
 
     )
 
-    useEffect(() => {
-
-        const mutator = chainId => window.location.reload()
-        
-            provider?.on("chainChanged", mutator) // mutate will return the new account every time it is changed
-
-
-           
-                return () => {
-
-                    provider?.removeListener("chainChanged", mutator) //when we are changing the page we are unsubscruibing the event listener accountsChanged
-                }
-    }
-    
-
-
-        , [provider])
+   
 
    
 
@@ -63,7 +43,7 @@ export const handler = (web3, provider) => () => {
             data, // current active network name
             
              // is we have an error or data the function chainId has finished loading 
-            mutate,
+         
             target: targetNetwork, // imported from .env file
             isSupported: data === targetNetwork, 
             ...rest// destructurise

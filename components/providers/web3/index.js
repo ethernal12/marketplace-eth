@@ -7,6 +7,11 @@ import { loadContract } from "utils/loadContract";
 
 const Web3Context = createContext(null)
 
+const setListeners = provider =>{
+    provider.on("chainChanged", _ => window.location.reload())
+
+}
+
 
 const createWeb3State = ({ web3, provider, contract, isLoading}) => {
     
@@ -39,7 +44,7 @@ export default function Web3Provider({ children }) {
 
         const loadProvider = async () => {
             const provider = await detectEthereumProvider()
-
+            setListeners(provider)
 
 
             if (provider) {

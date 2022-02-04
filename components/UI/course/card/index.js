@@ -1,7 +1,9 @@
+import { Message } from "@components/UI/common";
 import Image from "next/image"
 import Link from "next/link"
+import { AnimateKeyframes } from "react-simple-animate";
 
-export default function CourseCard({ course, Footer, disabled }) {
+export default function CourseCard({ course, Footer, disabled, state }) {
 
 
 
@@ -19,9 +21,49 @@ export default function CourseCard({ course, Footer, disabled }) {
                         height="230"
                     />
                 </div>
-                <div className=" p-8 flex-1">
+                <div className=" p-8 flex-2">
                     <div className="uppercase tracking-wide text-sm text-indigo-500 font-semibold">
                         {course.type}</div>
+
+                    <div className="flex items-center">
+                        {state === "purchased" &&
+                            <AnimateKeyframes
+                                play
+                                duration={2.5}
+                                keyframes={["opacity: 0.1", "opacity: 1"]}
+                                iterationCount="infinite"
+                            >
+                                <div className="text-xs text-black bg-yellow-200 p-1 px-3 rounded-full">
+
+                                    Pending...
+                                </div>
+
+                            </AnimateKeyframes>
+
+                        }
+                        {state === "activated" &&
+                            // <div className="text-xs text-black bg-green-200 p-1 px-3 rounded-full">
+
+                            //     Activated
+                            // </div>
+
+                            <Message type ="warning">
+
+                                Activated
+                            </Message>
+
+                        }
+                        {state === "deactivated" &&
+                            <div className="text-xs text-black bg-red-200 p-1 px-3 rounded-full">
+
+                                Deactivated
+                            </div>
+
+                        }
+                    </div>
+
+
+
                     <Link href={`/courses/${course.slug}`}>
                         <a
                             className="block mt-1 text-lg leading-tight font-medium text-black hover:underline">

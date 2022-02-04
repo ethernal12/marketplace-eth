@@ -12,7 +12,7 @@ const defaultOrder = {
 }
 
 
-export default function OrderModal({ course, onClose, onSubmit }) {
+export default function OrderModal({ course, onClose, onSubmit, isNewPurchase }) {
     const [isOpen, setIsOpen] = useState(false)
     const [order, setOrder] = useState(defaultOrder)
     const [enabledPrice, setEnabledPrice] = useState(false)
@@ -20,37 +20,39 @@ export default function OrderModal({ course, onClose, onSubmit }) {
     const { eth } = useEthPrice()
 
 
-    
+
 
     const TYPES = {
         success: "green",
         warning: "blue",
         danger: "red"
     }
-    
-  
 
 
 
-    const _defaultFormState = (isDisabled = true, message = "", color = "") => ({ isDisabled, message, color})
-    
-    const createFormState = ({ price, email, conformationEmail }, agreeTOS, TYPE) => {
+
+
+    const _defaultFormState = (isDisabled = true, message = "", color = "") => ({ isDisabled, message, color })
+
+    const createFormState = ({ price, email, conformationEmail }, agreeTOS, TYPE, isNewPurchase) => {
+        
         if (price = "" || Number(price) <= 0) {
-            
+
             return _defaultFormState(true, "The price is invalid!", TYPES["danger"])
         }
 
-        else if (conformationEmail.length == 0 || email.length == 0) {
-         
+
+        else if (isNewPurchase && (conformationEmail.length == 0 || email.length == 0)) {
+
             return _defaultFormState(true, "You must insert your email info!", TYPES["danger"])
         }
-        else if (email !== conformationEmail) {
-           
+        else if (isNewPurchase && (email !== conformationEmail)) {
+
             return _defaultFormState(true, "Email and your conformation emails do not match!", TYPES["danger"])
         }
 
         else if (!agreeTOS) {
-           
+
             return _defaultFormState(true, "You have not agreed to terms of service to sumbit the form!", TYPES["danger"])
         }
 
@@ -58,7 +60,7 @@ export default function OrderModal({ course, onClose, onSubmit }) {
         return _defaultFormState()
 
     }
-    const formState = createFormState(order, agreeTOS, TYPES)
+    const formState = createFormState(order, agreeTOS, TYPES, isNewPurchase)
 
     useEffect(() => {
         if (!!course) {
@@ -91,12 +93,12 @@ export default function OrderModal({ course, onClose, onSubmit }) {
                         <div className="mt-3 sm:mt-0 sm:ml-4 sm:text-left">
                             <h3 className="mb-7 text-lg font-bold leading-6 text-gray-900" id="modal-title">
 
-                                {course.title} fasfasf 
+                                {course.title} 
                             </h3>
                             {/* -------------------------set price value -------------------------------*/}
                             <div className="mt-1 relative rounded-md">
                                 <div className="mb-1">
-                                    <label className="mb-2 font-bold">Price(eth) sdadsadf</label>
+                                    <label className="mb-2 font-bold">Price(eth) </label>
                                     <div className="text-xs text-gray-700 flex">
                                         <label className="flex items-center mr-2">
                                             <input
@@ -144,56 +146,64 @@ export default function OrderModal({ course, onClose, onSubmit }) {
 
 
                             {/* -------------------------your email -------------------------------*/}
-                            <div className="mt-2 relative rounded-md">
-                                <div className="mb-1">
-                                    <label className="mb-2 font-bold">Email</label>
+
+                            {isNewPurchase &&
+
+                                <div className="mt-2 relative rounded-md">
+                                    <div className="mb-1">
+                                        <label className="mb-2 font-bold">Email</label>
+                                    </div>
+                                    <input
+                                        onChange={({ target: { value } }) => {
+
+                                            setOrder({
+                                                ...order,
+                                                email: value.trim()
+
+                                            })
+
+                                        }}
+
+
+                                        type="email"
+                                        name="email"
+                                        id="email"
+                                        className="w-80 focus:ring-indigo-500 shadow-md focus:border-indigo-500 block pl-7 p-4 sm:text-sm border-gray-300 rounded-md"
+                                        placeholder="x@y.com"
+                                    />
+                                    <p className="text-xs text-gray-700 mt-1">
+                                        It&apos;s important to fill a correct email, otherwise the order cannot be verified. We are not storing your email anywhere
+                                    </p>
+
+
                                 </div>
-                                <input
-                                    onChange={({ target: { value } }) => {
+                            }
 
-                                        setOrder({
-                                            ...order,
-                                            email: value.trim()
-
-                                        })
-
-                                    }}
-
-
-                                    type="email"
-                                    name="email"
-                                    id="email"
-                                    className="w-80 focus:ring-indigo-500 shadow-md focus:border-indigo-500 block pl-7 p-4 sm:text-sm border-gray-300 rounded-md"
-                                    placeholder="x@y.com"
-                                />
-                                <p className="text-xs text-gray-700 mt-1">
-                                    It&apos;s important to fill a correct email, otherwise the order cannot be verified. We are not storing your email anywhere
-                                </p>
-
-
-                            </div>
                             {/* -------------------------your email/ -------------------------------*/}
 
 
                             {/* ----------------------conformation email --------------------------*/}
-                            <div className="my-2 relative rounded-md">
-                                <div className="mb-1">
-                                    <label className="mb-2 font-bold">Repeat Email</label>
+
+                            {isNewPurchase &&
+                                <div className="my-2 relative rounded-md">
+                                    <div className="mb-1">
+                                        <label className="mb-2 font-bold">Repeat Email</label>
+                                    </div>
+                                    <input
+                                        onChange={({ target: { value } }) => {
+                                            setOrder({
+
+                                                ...order, // destructurize previous data of the order
+                                                conformationEmail: value.trim()
+                                            })
+
+                                        }}
+                                        type="email"
+                                        name="confirmationEmail"
+                                        id="confirmationEmail"
+                                        className="w-80 focus:ring-indigo-500 shadow-md focus:border-indigo-500 block pl-7 p-4 sm:text-sm border-gray-300 rounded-md" placeholder="x@y.com" />
                                 </div>
-                                <input
-                                    onChange={({ target: { value } }) => {
-                                        setOrder({
-
-                                            ...order, // destructurize previous data of the order
-                                            conformationEmail: value.trim()
-                                        })
-
-                                    }}
-                                    type="email"
-                                    name="confirmationEmail"
-                                    id="confirmationEmail"
-                                    className="w-80 focus:ring-indigo-500 shadow-md focus:border-indigo-500 block pl-7 p-4 sm:text-sm border-gray-300 rounded-md" placeholder="x@y.com" />
-                            </div>
+                            }
                             {/* ----------------------conformation email/ --------------------------*/}¨
 
 
@@ -219,7 +229,7 @@ export default function OrderModal({ course, onClose, onSubmit }) {
                             {/* ------------------------terms of service/ -----------------------------*/}
 
                             {formState.message && formState.color &&
-                            
+
                                 <div className={`p-4 my-3 text-blue-800 bg-${formState.color}-300 rounded-md text-sm`}>
                                     {formState.message}
                                     {console.log(TYPES["success"])}
@@ -232,7 +242,7 @@ export default function OrderModal({ course, onClose, onSubmit }) {
                     <Button
                         //disabled={formState.isDisabled}
                         onClick={() => {
-                            
+
                             onSubmit(order) // order is passed trought  on Submit prop to callback function in Markeplace
 
                         }}

@@ -25,6 +25,8 @@ contract Marketplace {
 
     address payable public owner;
 
+    bool isStopped = false;
+
     constructor() {
         setContractOwner(msg.sender);
     }
@@ -35,7 +37,7 @@ contract Marketplace {
     function purchaseCourse(
         bytes16 courseId, // 10 ascii - 3130 hex => 0x00000000000000000000000000003130 + 0x => 32 chars
         bytes32 proof
-    ) external payable returns (bytes32) {
+    ) external payable onlyWhenNotStopped returns (bytes32) {
         bytes32 courseHash = keccak256(abi.encodePacked(courseId, msg.sender));
         require(
             !checkOwner(courseHash),
@@ -58,6 +60,7 @@ contract Marketplace {
     function repurchaseCourse(bytes32 courseHash)
         external
         payable
+        onlyWhenNotStopped
         isCourseCreated(courseHash)
     {
         require(
@@ -76,6 +79,7 @@ contract Marketplace {
 
     function activateCourse(bytes32 courseHash)
         external
+        onlyWhenNotStopped
         onlyOwner
         isCourseCreated(courseHash)
     {
@@ -95,6 +99,7 @@ contract Marketplace {
 
     function deactivateCourse(bytes32 courseHash)
         external
+        onlyWhenNotStopped
         onlyOwner
         isCourseCreated(courseHash)
     {
@@ -116,11 +121,35 @@ contract Marketplace {
         setContractOwner(newOwner);
     }
 
-    function withdrawFunds(uint amount) external onlyOwner {
+    function withdrawFunds(uint256 amount) external onlyOwner {
         uint256 contractFunds = address(this).balance;
-        require(contractFunds >= amount , "The withdraw amount is exceeding the contracts balance");
+        require(
+            contractFunds >= amount,
+            "The withdraw amount is exceeding the contracts balance"
+        );
         (bool success, ) = owner.call{value: amount}("");
         require(success, "The transfer of funds was not successful!");
+    }
+
+    function emergancyWithdraw() external onlyOwner onlyWhenStopped {
+        uint256 contractFunds = address(this).balance;
+
+        (bool success, ) = owner.call{value: contractFunds}("");
+        require(success, "The transfer of funds was not successful!");
+    }
+
+    receive() external payable {}
+
+    function stopContract() external onlyOwner {
+        isStopped = true;
+    }
+
+    function selfDestruct() external onlyOwner onlyWhenStopped {
+        selfdestruct(owner);
+    }
+
+    function resumeContract() external onlyOwner {
+        isStopped = false;
     }
 
     //------------------------------------------------------getter functions----------------------------------------------
@@ -164,6 +193,21 @@ contract Marketplace {
             ownedCourses[_courseHash].owner !=
                 0x0000000000000000000000000000000000000000,
             "The course purchase does not exist!"
+        );
+        _;
+    }
+
+    modifier onlyWhenNotStopped() {
+        require(
+            isStopped == false,
+            "The contract is stopped from executing by owner."
+        );
+        _;
+    }
+    modifier onlyWhenStopped() {
+        require(
+            isStopped,
+            "The contract is NOT stopped."
         );
         _;
     }

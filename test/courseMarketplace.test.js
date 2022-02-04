@@ -34,7 +34,7 @@ contract("MarketplaceCourse", accounts => {
     const value = "9000000000000000"
     const hash = "0x0000000000000000000000000000000000000000000000000000000000000000"
     const withdrawFundsValue = "90000000000"
-    let exceedingValue =""
+    let exceedingValue = ""
     const value2 = "10000"
     let courseHashContract;
 
@@ -279,7 +279,7 @@ contract("MarketplaceCourse", accounts => {
 
 
             const gas = await getGas(result)
-            
+
 
             let balanceAfterTX = await getBalance(costumer1)
             let balanceContractAfterTX = await getBalance(_contract.address)
@@ -318,9 +318,9 @@ contract("MarketplaceCourse", accounts => {
         it("only withdraw funds is contract balance exceeds the withdraw value", async () => {
 
             const contractsBalance = await web3.eth.getBalance(_contract.address)
-            
+
             exceedingValue = toBN(contractsBalance).add(toBN(value2))
-           
+
 
             await expectRevert(_contract.withdrawFunds(exceedingValue, { from: owner }),
                 "The withdraw amount is exceeding the contracts balance"
@@ -333,15 +333,110 @@ contract("MarketplaceCourse", accounts => {
 
             const result = await _contract.withdrawFunds(withdrawFundsValue, { from: owner })
             const gas = await getGas(result)
-            
+
             const balanceOwnerAfterTX = await getBalance(owner)
-            
-           
+
+
             assert.equal(toBN(balanceOwnerBeforeTX).add(toBN(withdrawFundsValue)).sub(gas).toString(), balanceOwnerAfterTX)
 
-            
+
 
         })
+
+    })
+
+    describe("emargancy withdraw", () => {
+        after(async () => {
+
+
+
+            await _contract.resumeContract({ from: owner })
+        })
+
+        it("should NOT be able to withdraw funds if not owner", async () => {
+            await expectRevert(_contract.emergancyWithdraw({ from: costumer1 }),
+                "Only owner"
+
+            )
+
+
+        })
+
+        it("should NOT be able to withdraw funds if contract not stopped", async () => {
+            await expectRevert(_contract.emergancyWithdraw({ from: owner }),
+                "The contract is NOT stopped.."
+
+            )
+
+
+        })
+        it("owner should be able to wtihraw funds", async () => {
+            await _contract.stopContract({ from: owner })
+            const contractAddressBalance = await getBalance(_contract.address)
+            const balanceOwnerBeforeTX = await getBalance(owner)
+
+            const result = await _contract.emergancyWithdraw({ from: owner })
+            const gas = await getGas(result)
+
+            const balanceOwnerAfterTX = await getBalance(owner)
+
+
+            assert.equal(toBN(balanceOwnerBeforeTX).add(toBN(contractAddressBalance)).sub(gas).toString(), balanceOwnerAfterTX)
+
+
+        })
+
+
+    })
+
+    describe("self destruct test", () => {
+
+
+        it("should NOT be able to withdraw funds if not owner", async () => {
+            await expectRevert(_contract.selfDestruct({ from: costumer1 }),
+                "Only owner"
+
+            )
+
+
+        })
+
+        it("should NOT be able to withdraw funds if contract not stopped", async () => {
+            await expectRevert(_contract.selfDestruct({ from: owner }),
+                "The contract is NOT stopped."
+
+            )
+
+
+        })
+        it("owner should be able to selfdestruct() the contract", async () => {
+            await _contract.stopContract({ from: owner })
+            const contractAddressBalance = await getBalance(_contract.address)
+            
+            const balanceOwnerBeforeTX = await getBalance(owner)
+
+            const result = await _contract.selfDestruct({ from: owner })
+            const gas = await getGas(result)
+
+            const balanceOwnerAfterTX = await getBalance(owner)
+
+
+            assert.equal(toBN(balanceOwnerBeforeTX).add(toBN(contractAddressBalance)).sub(gas).toString(), balanceOwnerAfterTX)
+
+
+        })
+
+        it("contract should have balance of 0", async () => {
+
+            const contractAddressBalance = await getBalance(_contract.address)
+
+
+            assert.equal(contractAddressBalance, 0, "the contract doesn`t have balance!")
+
+        })
+
+
+
 
     })
 

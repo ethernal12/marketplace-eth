@@ -11,7 +11,7 @@ import Link from "next/link"
 
 export default function OwnedCourses({ courses }) {
     
-    const { account} = useWalletnInfo()
+    const { account, network} = useWalletnInfo()
     const { ownedCourses } = useOwnedCourses(courses, account.data)
     const { isLoading } = useWeb3()
 

@@ -7,10 +7,14 @@ import { useAdmin, useManageCourses } from "@components/hooks/web3";
 import { useState } from "react";
 import { compareProof } from "utils/compareProof";
 import { useWeb3 } from "@components/providers";
+import { normalizeOwnedCourses } from "@utils/normalize";
+
+import { useEffect } from "react";
 
 
 export const VerificationInput = ({ onVerify }) => {
   const [email, setEmail] = useState("")
+
 
 
   return (
@@ -37,6 +41,8 @@ export const VerificationInput = ({ onVerify }) => {
 }
 
 export default function ManageCourses() {
+  const [searchedCourse, setSearchedCourse] = useState(null)
+  const [filters, setFilters] = useState({ state: "" })
 
   const { account } = useAdmin({ redirectTo: "/marketplace" })
   const { contract } = useWeb3()
@@ -64,6 +70,91 @@ export default function ManageCourses() {
     return null
   }
 
+  const searchSumbit = async hash => {
+    var re = /[0-9A-Fa-f]{6}/g; // check if the searched string is hex
+
+
+    if (hash && hash.length == 66 && re.test(hash)) {
+      const searchedCourseHash = await contract.methods.getCourse(hash).call()
+      if (searchedCourseHash !== "0x0000000000000000000000000000000000000000") {
+        const normalize = normalizeOwnedCourses(web3)({ hash }, searchedCourseHash)
+        setSearchedCourse(normalize)
+
+
+      }
+      return
+
+
+    }
+    setSearchedCourse(null)
+  }
+
+
+  const renderCard = (course, isSearched) => {
+
+
+    return (
+
+      <ManageCourseCard
+        isSearched={isSearched}
+        key={course.ownedCourseId}
+        course={course}
+
+
+      >
+        <VerificationInput
+
+          onVerify={(email) => {
+
+            verifyCourse(email, { hash: course.courseHash, proof: course.proof })
+
+          }}
+
+        />
+
+
+        {proofedOwnership[course.courseHash] &&
+          < div className="mt-2" >
+            <Message>
+
+              Verified
+
+            </Message>
+
+          </div>
+
+        }
+        {proofedOwnership[course.courseHash] === false &&
+          < div className="mt-2">
+            <Message type="danger">
+
+              Wrong proof!
+
+            </Message>
+
+          </div>
+
+        }
+        <Button className="mt-2 mr-2" variant="green"
+          onClick={() => changeCourseState(course.courseHash, "activateCourse")}
+        >
+          Activate course
+        </Button>
+
+        <Button className="mt-2 mr-2" variant="red"
+          onClick={() => changeCourseState(course.courseHash, "deactivateCourse")}
+        >
+          Deactivate course
+        </Button>
+
+
+
+      </ManageCourseCard>
+    )
+  }
+
+
+
   const changeCourseState = async (courseHash, method) => {
 
     try {
@@ -71,86 +162,62 @@ export default function ManageCourses() {
         send({ from: account.data })
 
     } catch (error) {
-      
-      alert(`The ${method} unsuccessful`  + error)
+
+      alert(`The ${method} unsuccessful` + error)
     }
 
   }
 
-  console.log(manageCourses)
 
-  
+  const filterCourses =
+
+    manageCourses.data
+      ?.filter(course => {
+
+        if (filters.state === "all") {
+          return true
+        }
+        
+        return course.state === filters.state
+
+      })
+
+
+      .map(course => renderCard(course))
+
+
+
+
+
+
 
   return (
     <>
 
       <div className="py-4">
         <MarketplaceHeader />
-        <CourseFilter />
+        <CourseFilter
+          onFilterSelect={(filterValue) => setFilters({ state: filterValue })}
+          onSearchSubmit={searchSumbit}
+
+        />
       </div>
       <section className="grid grid-cols-1">
+        {searchedCourse &&
+          <div>
+            <h1 className="text-xl font-bold ">Searched course</h1>
+            {renderCard(searchedCourse, true)}
+            <h1 className="text-xl font-bold ">All courses</h1>
+          </div>
 
-        {manageCourses.data?.map(course =>
+        }
+        {filterCourses}
+        {filterCourses?.length === 0 &&
+          <Message>
 
-          <ManageCourseCard
-
-            key={course.ownedCourseId}
-            course={course}
-
-
-          >
-            <VerificationInput
-
-              onVerify={(email) => {
-
-                verifyCourse(email, { hash: course.courseHash, proof: course.proof })
-
-              }}
-
-            />
-
-
-            {proofedOwnership[course.courseHash] &&
-              < div className="mt-2" >
-                <Message>
-
-                  Verified
-
-                </Message>
-
-              </div>
-
-            }
-            {proofedOwnership[course.courseHash] === false &&
-              < div className="mt-2">
-                <Message type="danger">
-
-                  Wrong proof!
-
-                </Message>
-
-              </div>
-
-            }
-            <Button className="mt-2 mr-2" variant="green"
-              onClick={() => changeCourseState(course.courseHash, "activateCourse")}
-            >
-              Activate course
-            </Button>
-
-            <Button className="mt-2 mr-2" variant="red"
-              onClick={() => changeCourseState(course.courseHash, "deactivateCourse")}
-            >
-              Deactivate course
-            </Button>
-
-
-
-          </ManageCourseCard>
-
-
-
-        )}
+            No courses to diplay
+          </Message>
+        }
 
       </section>
     </>
