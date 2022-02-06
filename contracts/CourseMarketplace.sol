@@ -117,7 +117,7 @@ contract Marketplace {
         course.price = 0;
     }
 
-    function transferOwnership(address newOwner) external onlyOwner {
+    function transferOwnership(address newOwner) external {
         setContractOwner(newOwner);
     }
 

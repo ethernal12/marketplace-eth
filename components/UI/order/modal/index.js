@@ -217,7 +217,7 @@ export default function OrderModal({ course, onClose, onSubmit, isNewPurchase })
                                         onChange={({ target: { checked } }) => { // if clicked on checkmark,  checked = true
 
                                             setAgreeTOS(checked)
-                                            console.log(agreeTOS)
+                                        
 
                                         }}
 
@@ -232,7 +232,7 @@ export default function OrderModal({ course, onClose, onSubmit, isNewPurchase })
 
                                 <div className={`p-4 my-3 text-blue-800 bg-${formState.color}-300 rounded-md text-sm`}>
                                     {formState.message}
-                                    {console.log(TYPES["success"])}
+                                  
                                 </div>}
 
                         </div>
@@ -243,7 +243,7 @@ export default function OrderModal({ course, onClose, onSubmit, isNewPurchase })
                         //disabled={formState.isDisabled}
                         onClick={() => {
 
-                            onSubmit(order) // order is passed trought  on Submit prop to callback function in Markeplace
+                            onSubmit(order, course) // order is passed trought  on Submit prop to callback function in Markeplace
 
                         }}
 

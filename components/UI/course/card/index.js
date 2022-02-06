@@ -42,16 +42,12 @@ export default function CourseCard({ course, Footer, disabled, state }) {
 
                         }
                         {state === "activated" &&
-                            // <div className="text-xs text-black bg-green-200 p-1 px-3 rounded-full">
-
-                            //     Activated
-                            // </div>
-
-                            <Message type ="warning">
+                            <div className="text-xs text-black bg-green-200 p-1 px-3 rounded-full">
 
                                 Activated
-                            </Message>
+                            </div>
 
+                          
                         }
                         {state === "deactivated" &&
                             <div className="text-xs text-black bg-red-200 p-1 px-3 rounded-full">

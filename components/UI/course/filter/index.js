@@ -42,11 +42,7 @@ export default function CourseFilter({ onSearchSubmit, onFilterSelect }) {
             >
               {option}
 
-
-
             </option>
-
-
 
 
           )}

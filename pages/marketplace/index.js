@@ -10,13 +10,15 @@ import { useState } from "react"
 import { MarketplaceHeader } from "@components/UI/common/marketplace"
 import { createCourseHash } from "@utils/courseHash"
 import { createProof } from "@utils/createProof"
-import useSWR from "swr"
+import { toast } from 'react-toastify';
+import { withToast } from "@utils/toast"
+
 
 
 
 function Marketplace({ courses }) {
     const { web3, isLoading, contract, requireInstall } = useWeb3(); // deconstruct the web3Api object and retreive it via useWeb3()
-
+    const [busyCourseID, setBusyCourseID] = useState(null)
     const [selectedCourse, setSelectedCourse] = useState(null)
     const [isNewPurchase, setIsNewPurchase] = useState(true)
     const { account } = useAccount()
@@ -29,57 +31,81 @@ function Marketplace({ courses }) {
 
     const { ownedCourses } = useOwnedCourses(courses, account.data, network.data)
 
-    const purchaseCourse = async order => {
+    const purchaseCourse = async (coursePrice, courseIdToHex, createCourseProof) => {
 
 
+        try {
+            const result = await contract.methods.purchaseCourse(
+                courseIdToHex,
+                createCourseProof
+            ).send({ from: account.data, value: coursePrice })
+            ownedCourses.mutate()
+            return result
+        } catch (error) {
+            throw new Error.message
+        } finally {
+            setBusyCourseID(null)
+        }
 
-       
+
+    }
+
+    const repurchaseCourse = async (coursePrice, orderHash) => {
+
+
+        try {
+            const result = await contract.methods.repurchaseCourse(orderHash)
+                .send({ from: account.data, value: coursePrice })
+                ownedCourses.mutate()
+            return result
+        } catch (error) {
+            throw new Error.message
+        } finally {
+            setBusyCourseID(null)
+        }
+
 
     }
 
 
-    const repurchaseCourse = async order => {
 
 
-        if(isNewPurchase){
+    const processPurchase = async (order, course) => {
 
-            const courseIdToHex = web3.utils.utf8ToHex(selectedCourse.id)
+        if (isNewPurchase) {
 
+
+
+            const hexCourseId = web3.utils.utf8ToHex(selectedCourse.id)
             const coursePrice = web3.utils.toWei(String(order.price))
-    
+            setBusyCourseID(course.id)
             const orderHash = createCourseHash(web3)(selectedCourse.id, account.data)
             const createCourseProof = createProof(web3)(orderHash, order.email)
-    
-    
-    
-            try {
-                await contract.methods.purchaseCourse(
-                    courseIdToHex,
-                    createCourseProof
-                ).send({ from: account.data, value: coursePrice })
-    
-            } catch (error) {
-                alert("Data was not sent to the blockhain " + error)
-            }
+
+
+            withToast(purchaseCourse(coursePrice, hexCourseId, createCourseProof))
+
+
+
         }
-        else{
+        else {
 
             const coursePrice = web3.utils.toWei(String(order.price))
             const orderHash = createCourseHash(web3)(selectedCourse.id, account.data)
-            try {
-    
-    
-                await contract.methods.repurchaseCourse(orderHash)
-                    .send({ from: account.data, value: coursePrice })
-    
-            } catch (error) {
-                console.log(error)
-            }
+
+            withToast(repurchaseCourse(coursePrice, orderHash))
 
         }
 
-    
+
     }
+
+    const cleanupModal = () => {
+
+
+    }
+
+   
 
     return (
 
@@ -89,6 +115,7 @@ function Marketplace({ courses }) {
             {/* {isLoading ? "Is loading web3" : web3 ? "Web3 Ready" : "Please install Metamask"} */}
             <div className="py-4">
                 <MarketplaceHeader />
+                
 
 
             </div>
@@ -120,8 +147,8 @@ function Marketplace({ courses }) {
                                                 disabled={true}
 
                                                 variant="lightPurple">
-
-                                                Loading state...
+                                                {hasConnectedWallet ? "Loading state..." : "Connect"}
+                                              
                                             </Button>
                                         </div>
                                     )
@@ -130,7 +157,8 @@ function Marketplace({ courses }) {
 
                                 }
 
-
+                                const isBusy = busyCourseID === course.id
+                               
                                 if (owned) {
                                     return (
 
@@ -150,10 +178,10 @@ function Marketplace({ courses }) {
 
                                                         <Button
                                                             disabled={false}
-                                                            onClick={() => { 
-                                                                setIsNewPurchase(false) 
+                                                            onClick={() => {
+                                                                setIsNewPurchase(false)
                                                                 setSelectedCourse(course)
-                                                            
+
                                                             }}
                                                             variant="lightGreen">
 
@@ -165,11 +193,6 @@ function Marketplace({ courses }) {
                                                 </div>
 
                                             </div>
-
-
-
-
-
 
 
                                         </>
@@ -223,8 +246,20 @@ function Marketplace({ courses }) {
 
                                         }}
                                         variant="lightPurple">
+                                        {
 
-                                        Purchase
+                                            isBusy ?
+
+                                                <div className="flex">
+
+                                                    <Loader size = "sm"/>
+                                                    <div className="ml2">In progress...</div>
+                                                </div> :
+                                                <div>Purchase</div>
+
+
+                                        }
+
                                     </Button>
                                 )
                             }
@@ -243,7 +278,7 @@ function Marketplace({ courses }) {
                 selectedCourse &&
                 <OrderModal
                     isNewPurchase={isNewPurchase}
-                    onSubmit={repurchaseCourse}
+                    onSubmit={(order, course) => { processPurchase(order, course) }}
                     course={selectedCourse}
                     onClose={() => setSelectedCourse(null)}
                 />

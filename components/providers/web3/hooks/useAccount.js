@@ -6,7 +6,7 @@ export const handler = (web3, provider) => () => {
 
     const adminAddresses = {
 
-        "0x887183a9502878152ea4dc090058a660f10be60ebed4fac97e7f2c11b1199ebf": true // keccak256 hashed admin address(from hex input) 
+        "0x9fc49afec15fad209caa4d4bcd7aacd9159e667a59faa090382b9dd55b42d7ad": true // keccak256 hashed admin address(from hex input) without 0x
     }
 
 
